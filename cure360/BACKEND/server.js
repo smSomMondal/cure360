@@ -20,8 +20,4 @@ app.use('/doctor',doctorApi)
 app.use('/pathology',pathologyApi)
 app.use('/hospital',hospitalApi)
 
-
-
-console.log("heee");
-
 app.listen(5000,()=>{console.log("server running...")})
