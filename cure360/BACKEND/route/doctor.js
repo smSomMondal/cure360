@@ -16,4 +16,6 @@ doctorApi.post('/avalilableDoctor',signin)
 doctorApi.post('/bookCheckup',signin)
 doctorApi.post('/reportDownload',signin)
 
-export default doctorApi
+export default doctorApi 
+
+////fm
