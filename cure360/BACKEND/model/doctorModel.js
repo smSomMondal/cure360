@@ -70,4 +70,4 @@ const doctorSchema = new mongoose.Schema({
     listAppointment: [activeAppointment]
 }, { timestamps: true });
 
-module.exports = mongoose.model("Doctor", doctorSchema);
+export default mongoose.model("Doctor", doctorSchema);

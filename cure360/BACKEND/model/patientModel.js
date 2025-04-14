@@ -10,7 +10,7 @@ const appointment = new mongoose.Schema({
         type: Date,
         require: true
     },
-    appDocId:{
+    appDocId: {
         type: mongoose.Schema.ObjectId,
         ref: "Doctor",
         required: true
@@ -20,7 +20,7 @@ const appointment = new mongoose.Schema({
         default: 'active',
         enum: ['active', 'accept', 'cancel', 'close']
     }
-}, { _id:true,timestamps: true });
+}, { _id: true, timestamps: true });
 
 const patientSchema = new mongoose.Schema({
     name: {
@@ -45,9 +45,26 @@ const patientSchema = new mongoose.Schema({
         type: Number,
         required: true
     },
-    appointmentRequest: activeAppointment,
-    pastAppointment:[activeAppointment],
+    address: {
+        street: {
+            type: String,
+        },
+        city: {
+            type: String,
+        },
+        state: {
+            type: String,
+        },
+        country: {
+            type: String,
+        },
+        pincode: {
+            type: String,
+        },
+    },
+    appointmentRequest: appointment,
+    pastAppointment: [appointment],
 
 }, { timestamps: true });
 
-module.exports = mongoose.model("Patient", patientSchema);
+export default mongoose.model("Patient", patientSchema);

@@ -1,10 +1,10 @@
 import express from 'express'
-import { forgotPassword, signin, signup } from '../controller/userCon.js'
+import { registerUser,authUser,updateUser } from '../controller/userCon.js'
 
 const userApi = express.Router()
 
-userApi.post('/signup',signup)
-userApi.put('/login',signin)
-userApi.put('/forgotPassword',forgotPassword)
+userApi.post('/signup',registerUser)
+userApi.put('/login',authUser)
+userApi.put('/forgotPassword',updateUser)
 
 export default userApi

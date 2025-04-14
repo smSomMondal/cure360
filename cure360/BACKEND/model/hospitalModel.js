@@ -126,4 +126,4 @@ const hospitalSchema = new mongoose.Schema({
     }
 },{ timestamps: true });
 
-module.exports = mongoose.model('Hospital', hospitalSchema);
+export default mongoose.model('Hospital', hospitalSchema);

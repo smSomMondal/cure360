@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-const bcrypt = require("bcryptjs");
+import bcrypt from "bcryptjs";
 
 const userSchema = new mongoose.Schema(
     {
@@ -21,24 +21,9 @@ const userSchema = new mongoose.Schema(
             default: "patient",
             enum :["hospital","doctor","patient"]
         },
-        address: {
-            type: String,
-            validate: {
-                validator: function(value) {
-                    if (this.role === "user" && !value) {
-                        return false;
-                    }
-                    return true;
-                },
-                message: 'Address is required for users.'
-            }
-        },
+        
         typeId:{
             type: mongoose.Schema.ObjectId
-        },
-        pic:{
-            type:String,
-            default:"https://icon-library.com/images/no-profile-picture-icon/no-profile-picture-icon-27.jpg"
         },
     },
     {
@@ -54,4 +39,4 @@ userSchema.pre("save", async function(next){
 userSchema.methods.comparePassword = async function(pass){
     return await bcrypt.compare(pass, this.password);
 }
-module.exports = mongoose.model("User", userSchema);
+export default mongoose.model("User", userSchema);
