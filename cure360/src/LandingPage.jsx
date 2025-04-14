@@ -13,6 +13,7 @@ export default function HealthServicesLandingPage() {
           </div>
           <div className="hidden md:flex space-x-8">
             <a href="#" className="text-gray-700 hover:text-teal-600 font-medium">Home</a>
+            <a href="/Location" className="text-gray-700 hover:text-teal-600 font-medium">Location</a>
             <a href="#" className="text-gray-700 hover:text-teal-600 font-medium">Services</a>
             <a href="#" className="text-gray-700 hover:text-teal-600 font-medium">About</a>
             <a href="#" className="text-gray-700 hover:text-teal-600 font-medium">Doctors</a>
