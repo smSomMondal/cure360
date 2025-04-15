@@ -114,4 +114,4 @@ export const addAppointmentRequest = async (req, res) => {
 };
 
 
-export { addPatient };
+export { addPatient ,addAppointmentRequest};
