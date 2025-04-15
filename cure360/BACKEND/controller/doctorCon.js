@@ -1,6 +1,6 @@
 import Doctor from '../model/doctorModel.js';
 import User from '../model/userModel.js' // Adjust the path based on your structure
-
+import mongoose from 'mongoose';
 // Create a new doctor
 const addDoctor = async (req, res) => {
     try {
