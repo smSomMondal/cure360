@@ -1,7 +1,7 @@
 import Patient from '../model/patientModel.js';
-import User from '../model/userModel.js' // Adjust the path based on your structure
-import Doctor from '../model/doctorModel.js' // Adjust the path based on your structure
-import mongoose from 'mongoose';
+import User from '../model/userModel.js' 
+import Doctor from '../model/doctorModel.js' 
+
 // Create a new patient
 const addPatient = async (req, res) => {
     try {
@@ -79,10 +79,7 @@ export const addAppointmentRequest = async (req, res) => {
         if (!updatedPatient) {
             return res.status(404).json({ success: false, message: "Patient not found" });
         }
-        //console.log(updatedPatient);
-        
-        //console.log(updatedPatient.appointmentRequest._id);
-        
+
         const listAppointment = {
             patientId: patientId,
             PatInfo,

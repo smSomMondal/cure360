@@ -33,7 +33,7 @@ const addDoctor = async (req, res) => {
             res.status(201).json({
                 success: true,
                 message: "Patient created successfully",
-                data: { saveDocroe, newUser }
+                data: {saveDocroe,newUser}
             });
         }
 
