@@ -1,14 +1,20 @@
 import mongoose from 'mongoose';
 
 const appointment = new mongoose.Schema({
-    doctorId: {
+    petientId: {
         type: mongoose.Schema.ObjectId,
-        ref: "Doctor",
+        ref: "Patient",
         required: true
     },
-    date: {
+    ApplDate: {
         type: Date,
         require: true
+    },
+    vesiteDate: {
+        type: Date,
+    },
+    nextDate: {
+        type: Date,
     },
     appDocId: {
         type: mongoose.Schema.ObjectId,

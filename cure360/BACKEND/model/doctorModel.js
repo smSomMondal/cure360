@@ -3,18 +3,41 @@ import mongoose from 'mongoose';
 const activeAppointment = new mongoose.Schema({
     patientId: {
         type: mongoose.Schema.Types.ObjectId,
-        required: true
+        required: true,
+        ref: 'Patient'
+    },
+    PatInfo:{
+        name:{
+            type: String,
+            required: true
+        },
+        age:{
+            type: Number,
+            required: true
+        },
+        gender:{
+            type: String,
+        }
     },
     appointmentDate: {
         type: Date,
         required: true
     },
-    nextAppointmentDate: {
+    nextDate: {
         type: Date,
     },
     problem: {
         type: String,
         required: true
+    },
+    appDocId: {
+            type: mongoose.Schema.ObjectId,
+            ref: "Doctor",
+            required: true
+        },
+    peAppId: {
+        type: mongoose.Schema.Types.ObjectId,
+        required: true,
     },
     state: {
         type: String,
@@ -37,10 +60,26 @@ const doctorSchema = new mongoose.Schema({
         required: true,
         default: []
     },
-    department: {
+    specialization: {
         type: String,
-        required: true
-    },
+        required: true,
+        enum: [
+          "Cardiology",
+          "Neurology",
+          "Pediatrics",
+          "Orthopedics",
+          "Gynecology",
+          "Oncology",
+          "Dermatology",
+          "Psychiatry",
+          "Radiology",
+          "General Medicine",
+          "ENT",
+          "Urology",
+          "Gastroenterology",
+          "Nephrology"
+        ]
+      },
     address: {
         street: {
             type: String,

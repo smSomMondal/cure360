@@ -1,10 +1,11 @@
 import express from 'express'
-import { addDoctor} from '../controller/doctorCon.js'
+import { addDoctor,getDoctor} from '../controller/doctorCon.js'
 import {chqProtectedUser} from '../middleware/chqUser.js'
 
 const doctorApi = express.Router()
 
 doctorApi.post('/add',chqProtectedUser,addDoctor)
+doctorApi.post('/docList',getDoctor)
 /*doctorApi.put('/checkList',signin)
 doctorApi.put('/approve',forgotPassword)
 doctorApi.put('/cancel',forgotPassword)
