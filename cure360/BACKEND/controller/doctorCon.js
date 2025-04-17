@@ -78,11 +78,9 @@ const getDoctor = async (req, res) => {
     }
 }
 
-// const updateDoctor=async (req,res)=>{
-//     try{
+const appointList = async (req, res) => {
 
-//     }
 
-// };
+}
 
-export { addDoctor , getDoctor};
+export { addDoctor , getDoctor,appointList};
