@@ -43,15 +43,15 @@ const doctorsDB = [
   },
   {
     id: 6,
-    name: "Dr. Shizune",
+    name: "Dr. Nobita Nobi",
     state: "Punjab",
     city: "Mohali",
     specialization: "General Medicine",
-    experience: 9,
+    experience: 49,
   },
   {
     id: 7,
-    name: "Dr. Kakashi",
+    name: "Dr. Kakashi uchiha",
     state: "Rajasthan",
     city: "Udaipur",
     specialization: "Neurology",
@@ -71,7 +71,7 @@ const doctorsDB = [
     state: "Chhattisgarh",
     city: "Raipur",
     specialization: "Psychiatry",
-    experience: 14,
+    experience: 54,
   },
   {
     id: 10,
@@ -83,7 +83,7 @@ const doctorsDB = [
   },
   {
     id: 11,
-    name: "Dr. Rukia Kuchiki",
+    name: "Dr. Johan Liebert",
     state: "West Bengal",
     city: "Kolkata",
     specialization: "Psychiatry",
@@ -112,6 +112,54 @@ const doctorsDB = [
     city: "Mumbai",
     specialization: "Gastroenterology",
     experience: 7,
+  },
+  {
+    id: 15,
+    name: "Dr. Mereoleona Vermillion",
+    state: "West Bengal",
+    city: "Murshidabad",
+    specialization: "Radiology",
+    experience: 5,
+  },
+  {
+    id: 16,
+    name: "Dr. Kenzo Tenma",
+    state: "West Bengal",
+    city: "Kharagpur",
+    specialization: "Nephrology",
+    experience: 30,
+  },
+  {
+    id: 17,
+    name: "Dr. Soichiro Yagami",
+    state: "West Bengal",
+    city: "Darjiling",
+    specialization: "Neurology",
+    experience: 27,
+  },
+  {
+    id: 18,
+    name: "Dr. Taiki Inomata",
+    state: "Jharkhand",
+    city: "Deoghar",
+    specialization: "Gastroenterology",
+    experience: 18,
+  },
+  {
+    id: 19,
+    name: "Dr. Sung Jin-Woo",
+    state: "Jharkhand",
+    city: "Pakaur",
+    specialization: "Nephrology",
+    experience: 47,
+  },
+  {
+    id: 20,
+    name: "Dr. Hina Chono",
+    state: "Jharkhand",
+    city: "Sahibganj",
+    specialization: "Radiology",
+    experience: 2,
   },
 ];
 
@@ -1480,6 +1528,7 @@ export default function BookDoctor() {
           </select>
         </div>
 
+
         <div>
           <label className="block mb-1 font-medium">Specialization</label>
           <select
@@ -1496,6 +1545,7 @@ export default function BookDoctor() {
           </select>
         </div>
       </div>
+
 
       {/* Doctor Results */}
       <div className="space-y-4">
