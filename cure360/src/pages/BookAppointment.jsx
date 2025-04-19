@@ -9,11 +9,20 @@ export default function BookAppointment() {
   const [patientAge, setPatientAge] = useState("");
   const [patientContact, setPatientContact] = useState("");
   const [patientSymptoms, setPatientSymptoms] = useState("");
+  const [patientGender, setPatientGender] = useState(""); // New state
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
-  }
+    // Optional: Console log or API call logic
+    console.log({
+      patientName,
+      patientAge,
+      patientContact,
+      patientGender,
+      patientSymptoms,
+    });
+  };
 
   return (
     <div className="p-6 space-y-6">
@@ -33,7 +42,7 @@ export default function BookAppointment() {
 
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
-          <label className="block mb-1 font-medium">Patient name</label>
+          <label className="block mb-1 font-medium">Patient Name</label>
           <input
             type="text"
             value={patientName}
@@ -42,6 +51,7 @@ export default function BookAppointment() {
             required
           />
         </div>
+
         <div>
           <label className="block mb-1 font-medium">Age</label>
           <input
@@ -52,6 +62,23 @@ export default function BookAppointment() {
             required
           />
         </div>
+
+        
+        <div>
+          <label className="block mb-1 font-medium">Gender</label>
+          <select
+            value={patientGender}
+            onChange={(e) => setPatientGender(e.target.value)}
+            className=" border border-black bg-white text-black p-2 rounded"
+            required
+          >
+            <option value="" disabled>Select gender</option>
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+            <option value="Others">Others</option>
+          </select>
+        </div>
+
         <div>
           <label className="block mb-1 font-medium">Contact Number</label>
           <input
@@ -62,6 +89,7 @@ export default function BookAppointment() {
             required
           />
         </div>
+
         <div>
           <label className="block mb-1 font-medium">Symptoms</label>
           <textarea
@@ -71,6 +99,8 @@ export default function BookAppointment() {
             required
           />
         </div>
+
+        
         <Link to="/appointments-confirmation">
           <button
             type="submit"
@@ -80,6 +110,8 @@ export default function BookAppointment() {
           </button>
         </Link>
       </form>
+
+     
     </div>
   );
 }

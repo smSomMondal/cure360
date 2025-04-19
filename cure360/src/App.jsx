@@ -9,6 +9,7 @@ import BookDoctor from "./pages/BookDoctor";
 import BookAppointment from "./pages/BookAppointment";
 import AppointmentsConfirmation from "./pages/AppointmentsConfirmation";
 import { Book } from "lucide-react";
+import PatientForm from "./pages/patientform";
 function App() {
   return (
     <ChatProvider>
@@ -16,7 +17,8 @@ function App() {
         <Routes>
           <Route path="/" element={<LandingPage />} />
           <Route path="/location" element={<Location />} />
-          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/patientform" element={<PatientForm />} /> 
+          <Route path="/dashboard" element={<Dashboard />} />   
           <Route path="/doctors" element={<BookDoctor />} />
           <Route path="/chatbot" element={<Home />} />
           <Route path="/chatbot/chat" element={<Chat />} />
