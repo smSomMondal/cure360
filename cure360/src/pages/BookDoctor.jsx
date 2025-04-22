@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import { useMemo } from "react";
 const doctorsDB = [
   {
     id: 1,
@@ -1476,76 +1477,97 @@ export default function BookDoctor() {
   const [selectedCity, setSelectedCity] = useState("");
   const [selectedSpec, setSelectedSpec] = useState("");
 
-  const filteredDoctors = doctorsDB
-    .filter(
-      (doc) =>
-        (!selectedState || doc.state === selectedState) &&
-        (!selectedCity || doc.city === selectedCity) &&
-        (!selectedSpec || doc.specialization === selectedSpec)
-    )
-    .sort((a, b) => b.experience - a.experience);
+  // Using useMemo to prevent unnecessary re-filtering on each render
+  const filteredDoctors = useMemo(() => {
+    return doctorsDB
+      .filter(
+        (doc) =>
+          (!selectedState || doc.state === selectedState) &&
+          (!selectedCity || doc.city === selectedCity) &&
+          (!selectedSpec || doc.specialization === selectedSpec)
+      )
+      .sort((a, b) => b.experience - a.experience);
+  }, [selectedState, selectedCity, selectedSpec]);
 
   return (
-    <div className="p-6 space-y-6">
-      <h1 className="text-2xl font-bold mb-4">Book a Doctor</h1>
+    <div className="max-w-6xl mx-auto p-4 md:p-6 space-y-6">
+      <div className="bg-blue-50 p-4 rounded-lg mb-6">
+        <h1 className="text-2xl md:text-3xl font-bold text-blue-800">Book a Doctor</h1>
+        <p className="text-gray-600 mt-1">Find and book appointments with top specialists</p>
+      </div>
 
-      {/* Dropdowns */}
-      <div className="grid md:grid-cols-3 gap-4">
-        <div>
-          <label className="block mb-1 font-medium">State</label>
-          <select
-            className="w-full border p-2 rounded"
-            value={selectedState}
-            onChange={(e) => {
-              setSelectedState(e.target.value);
-              setSelectedCity("");
-            }}
-          >
-            <option value="">Select State</option>
-            {Object.keys(states).map((state) => (
-              <option key={state} value={state}>
-                {state}
-              </option>
-            ))}
-          </select>
-        </div>
-
-        <div>
-          <label className="block mb-1 font-medium">City</label>
-          <select
-            className="w-full border p-2 rounded"
-            value={selectedCity}
-            onChange={(e) => setSelectedCity(e.target.value)}
-            disabled={!selectedState}
-          >
-            <option value="">Select City</option>
-            {selectedState &&
-              states[selectedState].map((city) => (
-                <option key={city} value={city}>
-                  {city}
+      {/* Filter Section */}
+      <div className="bg-white rounded-xl shadow-sm p-4">
+        <h2 className="text-lg font-semibold mb-4 text-gray-700">Filter Doctors</h2>
+        <div className="grid md:grid-cols-3 gap-4">
+          <div>
+            <label className="block mb-2 font-medium text-gray-700">State</label>
+            <select
+              className="w-full border border-gray-300 p-2 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
+              value={selectedState}
+              onChange={(e) => {
+                setSelectedState(e.target.value);
+                setSelectedCity("");
+              }}
+            >
+              <option value="">All States</option>
+              {Object.keys(states).map((state) => (
+                <option key={state} value={state}>
+                  {state}
                 </option>
               ))}
-          </select>
-        </div>
+            </select>
+          </div>
 
+          <div>
+            <label className="block mb-2 font-medium text-gray-700">City</label>
+            <select
+              className="w-full border border-gray-300 p-2 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all disabled:bg-gray-100 disabled:text-gray-500"
+              value={selectedCity}
+              onChange={(e) => setSelectedCity(e.target.value)}
+              disabled={!selectedState}
+            >
+              <option value="">All Cities</option>
+              {selectedState &&
+                states[selectedState].map((city) => (
+                  <option key={city} value={city}>
+                    {city}
+                  </option>
+                ))}
+            </select>
+          </div>
 
-        <div>
-          <label className="block mb-1 font-medium">Specialization</label>
-          <select
-            className="w-full border p-2 rounded"
-            value={selectedSpec}
-            onChange={(e) => setSelectedSpec(e.target.value)}
-          >
-            <option value="">Select Specialization</option>
-            {specializations.map((spec) => (
-              <option key={spec} value={spec}>
-                {spec}
-              </option>
-            ))}
-          </select>
+          <div>
+            <label className="block mb-2 font-medium text-gray-700">Specialization</label>
+            <select
+              className="w-full border border-gray-300 p-2 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
+              value={selectedSpec}
+              onChange={(e) => setSelectedSpec(e.target.value)}
+            >
+              <option value="">All Specializations</option>
+              {specializations.map((spec) => (
+                <option key={spec} value={spec}>
+                  {spec}
+                </option>
+              ))}
+            </select>
+          </div>
         </div>
       </div>
 
+      {/* Results Count */}
+      <div className="flex justify-between items-center">
+        <h2 className="text-lg font-semibold text-gray-700">
+          Available Doctors
+          <span className="ml-2 text-sm font-normal text-gray-500">
+            ({filteredDoctors.length} found)
+          </span>
+        </h2>
+        
+        {filteredDoctors.length > 0 && (
+          <p className="text-sm text-gray-500">Sorted by experience</p>
+        )}
+      </div>
 
       {/* Doctor Results */}
       <div className="space-y-4">
@@ -1553,26 +1575,43 @@ export default function BookDoctor() {
           filteredDoctors.map((doc) => (
             <div
               key={doc.id}
-              className="border rounded-xl p-4 shadow-sm flex justify-between items-center"
+              className="border rounded-xl p-4 md:p-5 shadow-sm hover:shadow-md transition-shadow bg-white flex flex-col md:flex-row justify-between md:items-center gap-4"
             >
-              <div>
-                <h2 className="text-lg font-semibold">{doc.name}</h2>
-                <p className="text-sm text-gray-600">
-                  {doc.specialization} • {doc.city}, {doc.state}
+              <div className="flex-grow">
+                <h2 className="text-lg font-semibold text-blue-800">{doc.name}</h2>
+                <div className="flex flex-wrap gap-2 mt-1">
+                  <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                    {doc.specialization}
+                  </span>
+                  <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+                    {doc.city}, {doc.state}
+                  </span>
+                </div>
+                <p className="text-sm mt-2 text-gray-600">
+                  <span className="font-semibold">{doc.experience} years</span> of experience
                 </p>
-                <p className="text-sm">Experience: {doc.experience} years</p>
               </div>
-              <Link to="/book-appointment" state={{ doctor: doc }}>
-                <button className="mt-4 px-4 py-2 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 transition">
-                  Book
+              <Link to="/book-appointment" state={{ doctor: doc }} className="w-full md:w-auto">
+                <button className="w-full md:w-auto px-5 py-2 bg-blue-600 text-white font-semibold rounded-lg shadow-sm hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all">
+                  Book Appointment
                 </button>
               </Link>
             </div>
           ))
         ) : (
-          <p className="text-gray-500">
-            No doctors found with selected filters.
-          </p>
+          <div className="text-center py-10 bg-gray-50 rounded-lg">
+            <p className="text-gray-600 mb-2">No doctors match your selected filters.</p>
+            <button 
+              onClick={() => {
+                setSelectedState("");
+                setSelectedCity("");
+                setSelectedSpec("");
+              }}
+              className="text-blue-600 underline hover:text-blue-800"
+            >
+              Reset all filters
+            </button>
+          </div>
         )}
       </div>
     </div>
