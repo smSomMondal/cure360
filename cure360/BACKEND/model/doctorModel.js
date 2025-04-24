@@ -60,6 +60,10 @@ const doctorSchema = new mongoose.Schema({
         required: true,
         default: []
     },
+    experience: {
+        type: Number,
+        required: true
+    },
     specialization: {
         type: String,
         required: true,

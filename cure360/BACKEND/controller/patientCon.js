@@ -1,9 +1,11 @@
 import Patient from '../model/patientModel.js';
 import User from '../model/userModel.js' 
 import Doctor from '../model/doctorModel.js' 
+import Hospital from '../model/hospitalModel.js'
+import expressAsyncHandler from 'express-async-handler';
 
 // Create a new patient
-const addPatient = async (req, res) => {
+const addPatient = expressAsyncHandler(async (req, res) => {
     try {
 
         if (req.user._id) {
@@ -48,10 +50,10 @@ const addPatient = async (req, res) => {
             error: error.message
         });
     }
-};
+});
 
 
-export const addAppointmentRequest = async (req, res) => {
+const addAppointmentRequest = expressAsyncHandler(async (req, res) => {
     try {
         const { patientId, appDocId, ApplDate, vesiteDate, PatInfo,problem } = req.body;
 
@@ -67,6 +69,7 @@ export const addAppointmentRequest = async (req, res) => {
             appDocId,
             ApplDate,
             vesiteDate,
+            appDocId: appDocId,
             state: "active",
         };
 
@@ -111,7 +114,52 @@ export const addAppointmentRequest = async (req, res) => {
             message: "Server error while adding appointment request" + error.message,
         });
     }
-};
+});
 
+const hospitaAvilibility = expressAsyncHandler(async (req, res) => {
+    try {
+        const { city,state } = req.body;
+        if (!city || !state) {
+            return res.status(400).json({
+                success: false,
+                message: "city and state are required",
+            });
+        }
+        const hospitals = await Hospital.find({ "address.city": city, "address.state": state });
+        if (hospitals.length === 0) {
+            return res.status(404).json({
+                success: false,
+                message: "No hospitals found in this city and state",
+            });
+        }
+        res.status(200).json({
+            success: true,
+            message: "Hospitals found",
+            data: hospitals
+        });
 
-export { addPatient };
+        const doctor = await Doctor.findById(doctorId);
+        if (!doctor) {
+            return res.status(404).json({
+                success: false,
+                message: "Doctor not found",
+            });
+        }
+
+        const appointments = doctor.listAppointment.filter(app => app.state === 'active');
+        res.status(200).json({
+            success: true,
+            message: "Available appointments retrieved successfully",
+            data: appointments
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({
+            success: false,
+            message: "Something went wrong",
+            error: error.message
+        });
+    }
+});
+
+export { addPatient ,addAppointmentRequest , hospitaAvilibility};
