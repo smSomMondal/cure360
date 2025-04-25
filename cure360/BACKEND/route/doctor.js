@@ -1,14 +1,14 @@
 import express from 'express'
 import { addDoctor,getDoctor,appointList,approvedAppointment,appointCantList} from '../controller/doctorCon.js'
-import {chqProtectedUser} from '../middleware/chqUser.js'
+import {chqProtectedUser , chqProtectedDoctor} from '../middleware/chqUser.js'
 
 const doctorApi = express.Router()
 
 doctorApi.post('/add',chqProtectedUser,addDoctor)
-doctorApi.post('/docList',getDoctor)
-doctorApi.put('/checkList',appointList)
-doctorApi.put('/approve',approvedAppointment)
-doctorApi.put('/cancel',appointCantList)
+doctorApi.post('/docList',chqProtectedDoctor,getDoctor)
+doctorApi.put('/checkList',chqProtectedDoctor,appointList)
+doctorApi.put('/approve',chqProtectedDoctor,approvedAppointment)
+doctorApi.put('/cancel',chqProtectedDoctor,appointCantList)
 /*doctorApi.put('/joinMeet',forgotPassword)
 doctorApi.put('/sendReport',forgotPassword)
 doctorApi.put('/reportUpload',forgotPassword)
