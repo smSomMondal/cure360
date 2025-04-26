@@ -88,9 +88,9 @@ const approvedAppointment = async (req, res) => {
 
 }
 
-const appointCantList = async (req, res) => {
+const appointCancel = async (req, res) => {
 
 
 }
 
-export { addDoctor , getDoctor,appointList,approvedAppointment,appointCantList};
+export { addDoctor , getDoctor,appointList,approvedAppointment,appointCancel};
