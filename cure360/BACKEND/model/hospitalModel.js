@@ -108,19 +108,19 @@ const hospitalSchema = new mongoose.Schema({
         },
     },
     departments: [{
-        type: String,
+        type: String,//dont give
         enum: departmentEnum
     }],
     facilities: [{
-        type: String,
+        type: String,//dont give
         enum: facilityEnum
     }],
-    isActive: {
+    isActive: { // dont give
         type: Boolean,
         default: true
     },
     bedInfo: [bedInfo],
-    createdAt: {
+    createdAt: { // dont give
         type: Date,
         default: Date.now
     }

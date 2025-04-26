@@ -1,13 +1,14 @@
 import express from 'express'
-import { forgotPassword, signin, signup } from '../controller/userCon.js'
+import {addHospital, addMultipleBedsToHospital, updateMultipleBedNumbers, updateHospitalStatus, getBedsByLocation} from '../controller/hospitaCon.js'
 
 const hospitalApi = express.Router()
 
-hospitalApi.post('/add',signup)
-hospitalApi.put('/addBed',signin)
-hospitalApi.put('/updateBedAvality',forgotPassword)
+hospitalApi.post('/add',addHospital)
+hospitalApi.post('/addBed',addMultipleBedsToHospital)
+hospitalApi.post('/updateBedAvality',updateMultipleBedNumbers)
+hospitalApi.post('/updateStatus',updateHospitalStatus)
 
 //<----------------user------------------------>
-hospitalApi.post('/checkAvility',signin)
+hospitalApi.post('/checkAvility',getBedsByLocation)
 
 export default hospitalApi

@@ -20,7 +20,7 @@ export default function HealthServicesLandingPage() {
             <a href="#" className="text-gray-700 hover:text-teal-600 font-medium">Contact</a>
           </div>
           <div className="flex items-center space-x-4">
-          <Link to="/dashboard">
+          <Link to="/patientform">
             <button className="bg-teal-600 text-white px-4 py-2 rounded-md hover:bg-teal-700">
               Sign In
             </button>
