@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Calendar, Clock, MapPin, BedDouble, Search, User, CheckCircle, ChevronRight } from 'lucide-react';
-
+import { Link } from 'react-router-dom';
 export default function HospitalLandingPage() {
   const [isStarted, setIsStarted] = useState(false);
 
@@ -124,7 +124,8 @@ export default function HospitalLandingPage() {
         <div className="max-w-4xl mx-auto px-6 text-center">
           <h2 className="text-3xl font-bold text-gray-800 mb-4">Ready to find a hospital bed?</h2>
           <p className="text-xl text-gray-600 mb-8">Start the booking process now and secure your hospital bed in just a few clicks.</p>
-          
+          <Link
+          to="/bookhospital">
           <button 
             onClick={handleStartClick}
             className="px-8 py-3 bg-blue-600 text-white rounded-md font-semibold hover:bg-blue-700 transition-colors shadow-md flex items-center mx-auto"
@@ -132,6 +133,7 @@ export default function HospitalLandingPage() {
             Find Hospitals
             <ChevronRight className="ml-2" size={20} />
           </button>
+          </Link>
         </div>
       </div>
     </div>

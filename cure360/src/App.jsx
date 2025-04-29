@@ -11,6 +11,7 @@ import AppointmentsConfirmation from "./pages/AppointmentsConfirmation";
 import { Book } from "lucide-react";
 import PatientForm from "./pages/patientform";
 import HospitalLandingPage from "./pages/BookHospitalPage";
+import HospitalSelection from "./pages/Hospitalselection";
 function App() {
   return (
     <ChatProvider>
@@ -26,6 +27,7 @@ function App() {
           <Route path="/chatbot/chat" element={<Chat />} />
           <Route path="/book-appointment" element={<BookAppointment />} />
           <Route path="/appointments-confirmation" element={<AppointmentsConfirmation />} />
+          <Route path="/bookhospital" element={<HospitalSelection />} />
         </Routes>
       </BrowserRouter>
     </ChatProvider>
