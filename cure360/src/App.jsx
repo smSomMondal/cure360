@@ -12,8 +12,10 @@ import { Book } from "lucide-react";
 import PatientForm from "./pages/patientform";
 import Signup from "./component/loging/Signup";
 import Login from "./component/loging/Login";
+import Doctor from "./doctor/Doctor";
 import { useEffect, useState } from "react";
 import { useAuth } from "./context/AuthContex";
+import AddDoctor from "./doctor/AddDoctor";
 
 const PrivetComponent = () => {
   const storedUser = localStorage.getItem("user");
@@ -46,6 +48,7 @@ function App() {
           <Route path="/patientform" element={<PatientForm />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/doctors" element={<BookDoctor />} />
+          <Route path="/d" element={<Doctor />} />
           <Route path="/chatbot" element={<Home />} />
           <Route path="/chatbot/chat" element={<Chat />} />
           <Route path="/book-appointment" element={<BookAppointment />} />
@@ -59,7 +62,10 @@ function App() {
               <Route path="/home" element={<Dashboard />} />
             ) : (<></>)}
             {user1 === "doctor" ? (
-              <Route path="/home" element={<Dashboard />} />
+              <>
+              <Route path="/home" element={<Doctor />} />
+              <Route path="/addDoctor" element={<AddDoctor/>} />
+              </>              
             ) : (<></>)}
             {user1 === "hospital" ? (
               <Route path="/home" element={<Dashboard />} />
