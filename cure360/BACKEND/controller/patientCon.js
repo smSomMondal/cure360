@@ -16,6 +16,8 @@ const addPatient = expressAsyncHandler(async (req, res) => {
                 gender,
                 height,
                 address,
+                bloodGroup,
+                emergencyContact
             } = req.body;
 
             const newPatient = new Patient({
@@ -25,6 +27,8 @@ const addPatient = expressAsyncHandler(async (req, res) => {
                 gender,
                 height,
                 address,
+                bloodGroup,
+                emergencyContact
             });
 
             const savedPatient = await newPatient.save();
@@ -35,7 +39,7 @@ const addPatient = expressAsyncHandler(async (req, res) => {
             const newUser = await User.findOne({ _id: req.user._id }).select("-password");
 
 
-            res.status(201).json({
+            res.status(200).json({
                 success: true,
                 message: "Patient created successfully",
                 data: { savedPatient, newUser }

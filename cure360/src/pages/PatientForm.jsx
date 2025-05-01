@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import axios from 'axios'
 
 export default function PatientForm() {
   const [formData, setFormData] = useState({
@@ -7,6 +8,12 @@ export default function PatientForm() {
     weight: '',
     gender: 'male',
     height: '',
+    bloodGroup: '',
+    emergencyContact: {
+      name: '',
+      phone: '',
+      relation: ''
+    },
     address: {
       street: '',
       city: '',
@@ -15,12 +22,12 @@ export default function PatientForm() {
       pincode: ''
     }
   });
-  
+
   const [errors, setErrors] = useState({});
-  
+
   const handleChange = (e) => {
     const { name, value } = e.target;
-    
+
     if (name.includes('.')) {
       const [parent, child] = name.split('.');
       setFormData({
@@ -37,48 +44,66 @@ export default function PatientForm() {
       });
     }
   };
-  
+
   const validate = () => {
     const newErrors = {};
-    
+
     if (!formData.name.trim()) newErrors.name = "Name is required";
     if (!formData.age) newErrors.age = "Age is required";
     else if (isNaN(formData.age) || formData.age <= 0) newErrors.age = "Age must be a positive number";
-    
+
     if (!formData.weight) newErrors.weight = "Weight is required";
     else if (isNaN(formData.weight) || formData.weight <= 0) newErrors.weight = "Weight must be a positive number";
-    
+
     if (!formData.height) newErrors.height = "Height is required";
     else if (isNaN(formData.height) || formData.height <= 0) newErrors.height = "Height must be a positive number";
-    
+
     return newErrors;
   };
-  
-  const handleSubmit = (e) => {
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    const newErrors = validate();
-    
-    if (Object.keys(newErrors).length > 0) {
-      setErrors(newErrors);
-      return;
+    try {
+      const newErrors = validate();
+
+      if (Object.keys(newErrors).length > 0) {
+        setErrors(newErrors);
+        return;
+      }
+
+      // Here you would normally submit the data to your backend
+      console.log("Form data:", formData);
+      const storedData = JSON.parse(localStorage.getItem('user'));
+      const token = storedData?.token;
+      const Res = await axios.post("http://127.0.0.1:5000/patient/add", formData, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`
+        },
+      });
+      console.log(Res);
+      
+      // Navigate to dashboard after successful validation
+      if (Res.status === 200) {
+        window.location.href = '/dashboard';
+      }
+      
+    } catch (error) {
+      console.log(error);
+
     }
-    
-    // Here you would normally submit the data to your backend
-    console.log("Form data:", formData);
-    
-    // Navigate to dashboard after successful validation
-    window.location.href = '/dashboard';
+
   };
-  
+
   return (
     <div className="max-w-md mx-auto mt-8 p-6 bg-white rounded-lg shadow-lg">
       <h2 className="text-2xl font-bold text-center mb-6">Patient Registration Form</h2>
-      
+
       <form onSubmit={handleSubmit} className="space-y-6">
         {/* Personal Information Section */}
         <div className="bg-gray-50 p-5 rounded-md">
           <h3 className="text-lg font-medium mb-4">Personal Information</h3>
-          
+
           <div className="mb-4">
             <label className="block text-gray-700 text-sm font-medium mb-2">
               Full Name*
@@ -93,7 +118,7 @@ export default function PatientForm() {
             />
             {errors.name && <p className="text-red-500 text-xs mt-1">{errors.name}</p>}
           </div>
-          
+
           <div className="grid grid-cols-2 gap-4 mb-4">
             <div>
               <label className="block text-gray-700 text-sm font-medium mb-2">
@@ -109,7 +134,7 @@ export default function PatientForm() {
               />
               {errors.age && <p className="text-red-500 text-xs mt-1">{errors.age}</p>}
             </div>
-            
+
             <div>
               <label className="block text-gray-700 text-sm font-medium mb-2">
                 Gender*
@@ -126,7 +151,7 @@ export default function PatientForm() {
               </select>
             </div>
           </div>
-          
+
           <div className="grid grid-cols-2 gap-4">
             <div>
               <label className="block text-gray-700 text-sm font-medium mb-2">
@@ -142,7 +167,7 @@ export default function PatientForm() {
               />
               {errors.weight && <p className="text-red-500 text-xs mt-1">{errors.weight}</p>}
             </div>
-            
+
             <div>
               <label className="block text-gray-700 text-sm font-medium mb-2">
                 Height (cm)*
@@ -158,12 +183,86 @@ export default function PatientForm() {
               {errors.height && <p className="text-red-500 text-xs mt-1">{errors.height}</p>}
             </div>
           </div>
+
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-gray-700 text-sm font-medium mb-2">
+                Blood Group
+              </label>
+              <select
+                name="bloodGroup"
+                value={formData.bloodGroup}
+                onChange={handleChange}
+                className="w-full border border-black bg-white text-black p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+              >
+                <option value="A+">A+</option>
+                <option value="A-">A-</option>
+                <option value="B+">B+</option>
+                <option value="B-">B-</option>
+                <option value="AB+">AB+</option>
+                <option value="AB-">AB-</option>
+                <option value="O+">O+</option>
+                <option value="O-">O-</option>
+                <option value="OTHERS">OTHERS</option>
+                <option value="Unknown">Unknown</option>
+              </select>
+            </div>
+          </div>
         </div>
-        
+        {/*emergency contact */}
+        <div className="bg-gray-50 p-5 rounded-md">
+          <h3 className="text-lg font-medium mb-4">Emmergency Information</h3>
+
+          <div className="mb-4">
+            <label className="block text-gray-700 text-sm font-medium mb-2">
+              Name
+            </label>
+            <input
+              type="text"
+              name="emergencyContact.name"
+              value={formData.emergencyContact.name}
+              onChange={handleChange}
+              className="w-full border border-black bg-white text-black p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+              placeholder="Street address"
+            />
+          </div>
+
+          <div className="grid grid-cols-2 gap-4 mb-4">
+            <div>
+              <label className="block text-gray-700 text-sm font-medium mb-2">
+                Phone no
+              </label>
+              <input
+                type="text"
+                name="emergencyContact.phone"
+                value={formData.emergencyContact.phone}
+                onChange={handleChange}
+                className="w-full border border-black bg-white text-black p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                placeholder="City"
+              />
+            </div>
+
+            <div>
+              <label className="block text-gray-700 text-sm font-medium mb-2">
+                Relation
+              </label>
+              <input
+                type="text"
+                name="emergencyContact.relation"
+                value={formData.emergencyContact.relation}
+                onChange={handleChange}
+                className="w-full border border-black bg-white text-black p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                placeholder="State"
+              />
+            </div>
+          </div>
+
+
+        </div>
         {/* Address Section */}
         <div className="bg-gray-50 p-5 rounded-md">
           <h3 className="text-lg font-medium mb-4">Address Information</h3>
-          
+
           <div className="mb-4">
             <label className="block text-gray-700 text-sm font-medium mb-2">
               Street Address
@@ -177,7 +276,7 @@ export default function PatientForm() {
               placeholder="Street address"
             />
           </div>
-          
+
           <div className="grid grid-cols-2 gap-4 mb-4">
             <div>
               <label className="block text-gray-700 text-sm font-medium mb-2">
@@ -192,7 +291,7 @@ export default function PatientForm() {
                 placeholder="City"
               />
             </div>
-            
+
             <div>
               <label className="block text-gray-700 text-sm font-medium mb-2">
                 State/Province
@@ -207,7 +306,7 @@ export default function PatientForm() {
               />
             </div>
           </div>
-          
+
           <div className="grid grid-cols-2 gap-4">
             <div>
               <label className="block text-gray-700 text-sm font-medium mb-2">
@@ -222,7 +321,7 @@ export default function PatientForm() {
                 placeholder="Country"
               />
             </div>
-            
+
             <div>
               <label className="block text-gray-700 text-sm bg-white font-medium mb-2">
                 Postal/ZIP Code
@@ -238,7 +337,7 @@ export default function PatientForm() {
             </div>
           </div>
         </div>
-        
+
         <div>
           <button
             type="submit"
