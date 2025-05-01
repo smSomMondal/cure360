@@ -20,6 +20,9 @@ import { useEffect, useState } from "react";
 import { useAuth } from "./context/AuthContex";
 import AddDoctor from "./doctor/AddDoctor";
 
+
+import AI from "./AI";
+
 const PrivetComponent = () => {
   const storedUser = localStorage.getItem("user");
   return storedUser ? <Outlet /> : <Navigate to={'/login'} />
@@ -62,6 +65,7 @@ function App() {
           <Route path="/hospitaldashboard" element={<HospitalDashboard />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/AI" element={<AI />} />
 
           <Route element={<PrivetComponent />}>
             <Route path="/" element={<LandingPage />} />

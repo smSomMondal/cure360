@@ -64,6 +64,11 @@ export default function Dashboard() {
       onClick: () => navigate("/doctors"),
     },
     {
+      title: "Hospital",
+      icon: <StethoscopeIcon className="w-5 h-5" />,
+      onClick: () => navigate("/hospital"),
+    },
+    {
       title: "Book Lab Test",
       icon: <FlaskConicalIcon className="w-5 h-5" />,
       onClick: () => navigate("/labs"),
@@ -84,10 +89,12 @@ export default function Dashboard() {
       onClick: () => navigate("/shop"),
     },
     {
-      title: "Billing",
-      icon: <WalletIcon className="w-5 h-5" />,
-      onClick: () => navigate("/billing"),
+      title: "AI POWERRED SELF DIAGNOSIS",
+      icon: <Activity className="w-5 h-5" />,
+      
+      onClick: () => navigate("/AI"),
     },
+    
   ];
 
   const stats = [
@@ -102,7 +109,7 @@ export default function Dashboard() {
       icon: <FileTextIcon className="w-5 h-5" />
     },
     {
-      label: "Health Score",
+      label: "AI POWERED DIAGNOSIS",
       value: "85%",
       icon: <Activity className="w-5 h-5" />
     }
