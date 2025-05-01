@@ -66,6 +66,7 @@ export default function PatientForm() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      setIsSubmitting(true)
       const newErrors = validate();
 
       if (Object.keys(newErrors).length > 0) {
