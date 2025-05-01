@@ -1,57 +1,63 @@
 import React, { useState } from 'react';
 import {
-  Box,
-  Grid,
-  Paper,
-  Typography,
-  Card,
-  CardContent,
-  Button,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  TextField,
-  FormControl,
-  InputLabel,
-  Select,
-  MenuItem,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Chip,
-  IconButton,
-  Tooltip
-} from '@mui/material';
-import { LocalHospital, Event, AccessTime, PersonAdd, Check, Clear } from '@mui/icons-material';
+  Hospital,
+  UserPlus,
+  Check,
+  X,
+  Calendar,
+  Clock,
+  ChevronDown
+} from 'lucide-react';
 
 const BedManagement = () => {
   const [beds, setBeds] = useState({
     total: 100,
     occupied: 75,
     available: 25,
-    icu: { total: 20, occupied: 15, beds: Array(20).fill(null).map((_, i) => ({
-      id: `ICU-${i + 1}`,
-      status: i < 15 ? 'occupied' : 'available',
-      patient: i < 15 ? { name: `Patient ${i + 1}`, admissionDate: '2025-04-25', expectedDischarge: '2025-04-30' } : null
-    })) },
-    general: { total: 60, occupied: 45, beds: Array(60).fill(null).map((_, i) => ({
-      id: `GEN-${i + 1}`,
-      status: i < 45 ? 'occupied' : 'available',
-      patient: i < 45 ? { name: `Patient ${i + 1}`, admissionDate: '2025-04-25', expectedDischarge: '2025-04-29' } : null
-    })) },
-    emergency: { total: 20, occupied: 15, beds: Array(20).fill(null).map((_, i) => ({
-      id: `EMG-${i + 1}`,
-      status: i < 15 ? 'occupied' : 'available',
-      patient: i < 15 ? { name: `Patient ${i + 1}`, admissionDate: '2025-04-26', expectedDischarge: '2025-04-28' } : null
-    })) }
+    icu: { 
+      total: 20, 
+      occupied: 15, 
+      beds: Array(20).fill(null).map((_, i) => ({
+        id: `ICU-${i + 1}`,
+        status: i < 15 ? 'occupied' : 'available',
+        patient: i < 15 ? { 
+          name: `Patient ${i + 1}`, 
+          admissionDate: '2025-04-25', 
+          expectedDischarge: '2025-04-30' 
+        } : null
+      }))
+    },
+    general: { 
+      total: 60, 
+      occupied: 45, 
+      beds: Array(60).fill(null).map((_, i) => ({
+        id: `GEN-${i + 1}`,
+        status: i < 45 ? 'occupied' : 'available',
+        patient: i < 45 ? { 
+          name: `Patient ${i + 1}`, 
+          admissionDate: '2025-04-25', 
+          expectedDischarge: '2025-04-29' 
+        } : null
+      }))
+    },
+    emergency: { 
+      total: 20, 
+      occupied: 15, 
+      beds: Array(20).fill(null).map((_, i) => ({
+        id: `EMG-${i + 1}`,
+        status: i < 15 ? 'occupied' : 'available',
+        patient: i < 15 ? { 
+          name: `Patient ${i + 1}`, 
+          admissionDate: '2025-04-26', 
+          expectedDischarge: '2025-04-28' 
+        } : null
+      }))
+    }
   });
 
   const [open, setOpen] = useState(false);
   const [selectedBed, setSelectedBed] = useState(null);
+  const [activeTab, setActiveTab] = useState('icu');
   const [newPatient, setNewPatient] = useState({
     name: '',
     admissionDate: new Date().toISOString().split('T')[0],
@@ -72,6 +78,8 @@ const BedManagement = () => {
         expectedDischarge: newPatient.expectedDischarge
       };
       updatedBeds[department].occupied += 1;
+      updatedBeds.occupied += 1;
+      updatedBeds.available -= 1;
       setBeds(updatedBeds);
     }
     
@@ -93,189 +101,228 @@ const BedManagement = () => {
       bedToUpdate.status = 'available';
       bedToUpdate.patient = null;
       updatedBeds[department].occupied -= 1;
+      updatedBeds.occupied -= 1;
+      updatedBeds.available += 1;
       setBeds(updatedBeds);
     }
   };
 
+  const StatCard = ({ title, total, available, occupied, icon }) => (
+    <div className="bg-white rounded-lg shadow p-6">
+      <div className="flex items-center mb-2">
+        {icon}
+        <h3 className="text-lg font-medium ml-2">{title}</h3>
+      </div>
+      <p className="text-3xl font-bold mb-4">{total}</p>
+      <div className="flex gap-2">
+        <span className="bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded">
+          Available: {available}
+        </span>
+        <span className="bg-red-100 text-red-800 text-xs font-medium px-2.5 py-0.5 rounded">
+          Occupied: {occupied}
+        </span>
+      </div>
+    </div>
+  );
+
+  const TabButton = ({ name, active, onClick }) => (
+    <button
+      className={`px-4 py-2 font-medium text-sm ${
+        active 
+          ? 'bg-blue-600 text-white rounded-t-lg' 
+          : 'text-blue-600 hover:bg-blue-50'
+      }`}
+      onClick={onClick}
+    >
+      {name.toUpperCase()}
+    </button>
+  );
+
+  const StatusBadge = ({ status }) => (
+    <span 
+      className={`px-2 py-0.5 text-xs font-medium rounded ${
+        status === 'available' 
+          ? 'bg-green-100 text-green-800' 
+          : 'bg-red-100 text-red-800'
+      }`}
+    >
+      {status}
+    </span>
+  );
+
   return (
-    <Box sx={{ p: 3 }}>
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 3 }}>
-        <Typography variant="h4" gutterBottom>
-          Bed Management
-        </Typography>
-        <Button
-          variant="contained"
-          startIcon={<PersonAdd />}
-          onClick={() => setOpen(true)}
+    <div className="p-6 bg-gray-50 min-h-screen">
+      <div className="flex justify-between mb-6">
+        <h1 className="text-2xl font-bold">Bed Management</h1>
+        <button
+          className={`flex items-center px-4 py-2 text-white font-medium rounded ${
+            selectedBed 
+              ? 'bg-blue-600 hover:bg-blue-700' 
+              : 'bg-gray-400 cursor-not-allowed'
+          }`}
+          onClick={() => selectedBed && setOpen(true)}
           disabled={!selectedBed}
         >
+          <UserPlus className="w-4 h-4 mr-2" />
           Assign Bed
-        </Button>
-      </Box>
+        </button>
+      </div>
       
-      <Grid container spacing={3}>
-        <Grid item xs={12} md={4}>
-          <Card>
-            <CardContent>
-              <Typography variant="h6" sx={{ display: 'flex', alignItems: 'center' }}>
-                <LocalHospital sx={{ mr: 1 }} /> Total Beds
-              </Typography>
-              <Typography variant="h3">{beds.total}</Typography>
-              <Box sx={{ mt: 2, display: 'flex', gap: 2 }}>
-                <Chip 
-                  label={`Available: ${beds.available}`}
-                  color="success"
-                  size="small"
-                />
-                <Chip 
-                  label={`Occupied: ${beds.occupied}`}
-                  color="error"
-                  size="small"
-                />
-              </Box>
-            </CardContent>
-          </Card>
-        </Grid>
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+        <StatCard 
+          title="Total Beds" 
+          total={beds.total} 
+          available={beds.available} 
+          occupied={beds.occupied}
+          icon={<Hospital className="w-5 h-5 text-blue-600" />} 
+        />
 
         {['icu', 'general', 'emergency'].map((dept) => (
-          <Grid item xs={12} md={4} key={dept}>
-            <Card>
-              <CardContent>
-                <Typography variant="h6" sx={{ textTransform: 'uppercase' }}>
-                  {dept} Beds
-                </Typography>
-                <Typography variant="h3">{beds[dept].total}</Typography>
-                <Box sx={{ mt: 2, display: 'flex', gap: 2 }}>
-                  <Chip 
-                    label={`Available: ${beds[dept].total - beds[dept].occupied}`}
-                    color="success"
-                    size="small"
-                  />
-                  <Chip 
-                    label={`Occupied: ${beds[dept].occupied}`}
-                    color="error"
-                    size="small"
-                  />
-                </Box>
-              </CardContent>
-            </Card>
-          </Grid>
+          <StatCard 
+            key={dept}
+            title={`${dept.toUpperCase()} Beds`} 
+            total={beds[dept].total} 
+            available={beds[dept].total - beds[dept].occupied} 
+            occupied={beds[dept].occupied}
+            icon={<Hospital className="w-5 h-5 text-blue-600" />} 
+          />
         ))}
-      </Grid>
+      </div>
 
-      {['icu', 'general', 'emergency'].map((dept) => (
-        <Box sx={{ mt: 4 }} key={dept}>
-          <Typography variant="h6" sx={{ mb: 2, textTransform: 'uppercase' }}>
-            {dept} Ward Status
-          </Typography>
-          <TableContainer component={Paper}>
-            <Table size="small">
-              <TableHead>
-                <TableRow>
-                  <TableCell>Bed ID</TableCell>
-                  <TableCell>Status</TableCell>
-                  <TableCell>Patient Name</TableCell>
-                  <TableCell>Admission Date</TableCell>
-                  <TableCell>Expected Discharge</TableCell>
-                  <TableCell>Actions</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {beds[dept].beds.map((bed) => (
-                  <TableRow key={bed.id}>
-                    <TableCell>{bed.id}</TableCell>
-                    <TableCell>
-                      <Chip
-                        label={bed.status}
-                        color={bed.status === 'available' ? 'success' : 'error'}
-                        size="small"
-                      />
-                    </TableCell>
-                    <TableCell>{bed.patient?.name || '-'}</TableCell>
-                    <TableCell>{bed.patient?.admissionDate || '-'}</TableCell>
-                    <TableCell>{bed.patient?.expectedDischarge || '-'}</TableCell>
-                    <TableCell>
-                      {bed.status === 'available' ? (
-                        <Tooltip title="Select for assignment">
-                          <IconButton
-                            size="small"
-                            color="primary"
-                            onClick={() => {
-                              setSelectedBed(bed.id);
-                              setNewPatient({...newPatient, department: dept});
-                              setOpen(true);
-                            }}
-                          >
-                            <PersonAdd />
-                          </IconButton>
-                        </Tooltip>
-                      ) : (
-                        <Tooltip title="Discharge patient">
-                          <IconButton
-                            size="small"
-                            color="error"
-                            onClick={() => handleDischargeBed(dept, bed.id)}
-                          >
-                            <Clear />
-                          </IconButton>
-                        </Tooltip>
-                      )}
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
-        </Box>
-      ))}
+      <div className="bg-white rounded-lg shadow">
+        <div className="flex border-b">
+          {['icu', 'general', 'emergency'].map((dept) => (
+            <TabButton 
+              key={dept}
+              name={dept} 
+              active={activeTab === dept}
+              onClick={() => setActiveTab(dept)} 
+            />
+          ))}
+        </div>
 
-      <Dialog open={open} onClose={() => setOpen(false)} maxWidth="sm" fullWidth>
-        <DialogTitle>Assign Bed {selectedBed}</DialogTitle>
-        <DialogContent>
-          <Grid container spacing={2} sx={{ mt: 1 }}>
-            <Grid item xs={12}>
-              <TextField
-                fullWidth
-                label="Patient Name"
-                value={newPatient.name}
-                onChange={(e) => setNewPatient({...newPatient, name: e.target.value})}
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                fullWidth
-                label="Admission Date"
-                type="date"
-                value={newPatient.admissionDate}
-                onChange={(e) => setNewPatient({...newPatient, admissionDate: e.target.value})}
-                InputLabelProps={{ shrink: true }}
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                fullWidth
-                label="Expected Discharge"
-                type="date"
-                value={newPatient.expectedDischarge}
-                onChange={(e) => setNewPatient({...newPatient, expectedDischarge: e.target.value})}
-                InputLabelProps={{ shrink: true }}
-              />
-            </Grid>
-          </Grid>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setOpen(false)}>Cancel</Button>
-          <Button
-            onClick={handleAssignBed}
-            variant="contained"
-            color="primary"
-            disabled={!newPatient.name || !newPatient.expectedDischarge}
-          >
-            Assign
-          </Button>
-        </DialogActions>
-      </Dialog>
-    </Box>
+        <div className="overflow-x-auto">
+          <table className="w-full text-sm text-left">
+            <thead className="text-xs uppercase bg-gray-50">
+              <tr>
+                <th className="px-6 py-3">Bed ID</th>
+                <th className="px-6 py-3">Status</th>
+                <th className="px-6 py-3">Patient Name</th>
+                <th className="px-6 py-3">Admission Date</th>
+                <th className="px-6 py-3">Expected Discharge</th>
+                <th className="px-6 py-3">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {beds[activeTab].beds.map((bed) => (
+                <tr key={bed.id} className="border-b hover:bg-gray-50">
+                  <td className="px-6 py-4 font-medium">{bed.id}</td>
+                  <td className="px-6 py-4">
+                    <StatusBadge status={bed.status} />
+                  </td>
+                  <td className="px-6 py-4">{bed.patient?.name || '-'}</td>
+                  <td className="px-6 py-4">{bed.patient?.admissionDate || '-'}</td>
+                  <td className="px-6 py-4">{bed.patient?.expectedDischarge || '-'}</td>
+                  <td className="px-6 py-4">
+                    {bed.status === 'available' ? (
+                      <button
+                        className="text-blue-600 hover:text-blue-900 mr-2"
+                        title="Select for assignment"
+                        onClick={() => {
+                          setSelectedBed(bed.id);
+                          setNewPatient({...newPatient, department: activeTab});
+                          setOpen(true);
+                        }}
+                      >
+                        <UserPlus className="w-5 h-5" />
+                      </button>
+                    ) : (
+                      <button
+                        className="text-red-600 hover:text-red-900 mr-2"
+                        title="Discharge patient"
+                        onClick={() => handleDischargeBed(activeTab, bed.id)}
+                      >
+                        <X className="w-5 h-5" />
+                      </button>
+                    )}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      {open && (
+        <div className="fixed inset-0 bg-black bg-opacity-25 flex items-center justify-center p-4 z-50">
+          <div className="bg-white rounded-lg shadow-xl w-full max-w-md">
+            <div className="p-6 border-b">
+              <h3 className="text-lg font-medium">Assign Bed {selectedBed}</h3>
+            </div>
+            
+            <div className="p-6">
+              <div className="mb-4">
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Patient Name
+                </label>
+                <input
+                  type="text"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                  value={newPatient.name}
+                  onChange={(e) => setNewPatient({...newPatient, name: e.target.value})}
+                />
+              </div>
+              
+              <div className="grid grid-cols-2 gap-4 mb-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Admission Date
+                  </label>
+                  <input
+                    type="date"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                    value={newPatient.admissionDate}
+                    onChange={(e) => setNewPatient({...newPatient, admissionDate: e.target.value})}
+                  />
+                </div>
+                
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Expected Discharge
+                  </label>
+                  <input
+                    type="date"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                    value={newPatient.expectedDischarge}
+                    onChange={(e) => setNewPatient({...newPatient, expectedDischarge: e.target.value})}
+                  />
+                </div>
+              </div>
+            </div>
+            
+            <div className="bg-gray-50 px-6 py-3 flex justify-end gap-2 rounded-b-lg">
+              <button
+                className="px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 rounded"
+                onClick={() => setOpen(false)}
+              >
+                Cancel
+              </button>
+              <button
+                className={`px-4 py-2 text-sm font-medium text-white rounded ${
+                  newPatient.name && newPatient.expectedDischarge
+                    ? 'bg-blue-600 hover:bg-blue-700'
+                    : 'bg-gray-400 cursor-not-allowed'
+                }`}
+                onClick={handleAssignBed}
+                disabled={!newPatient.name || !newPatient.expectedDischarge}
+              >
+                Assign
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
   );
 };
 

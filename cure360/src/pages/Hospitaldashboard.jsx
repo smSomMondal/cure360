@@ -1,12 +1,82 @@
 import React, { useState } from 'react';
+import BedManagement from './BedManagement'; // Import the BedManagement component
 
 const HospitalDashboard = () => {
   const today = new Date().toLocaleDateString();
   const [activeNavItem, setActiveNavItem] = useState("Dashboard");
   
+  // Render the appropriate component based on activeNavItem
+  const renderContent = () => {
+    switch(activeNavItem) {
+      case "Bed Management":
+        return <BedManagement />;
+      default:
+        return (
+          <>
+            {/* Dashboard Content */}
+            <h1 className="text-2xl md:text-3xl font-bold text-gray-800 mb-6">Dashboard – {today}</h1>
+            
+            {/* Summary Cards */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-10">
+              <SummaryCard 
+                title="Bed Occupancy" 
+                value="72%" 
+                icon="🛏️" 
+                color="bg-blue-100" 
+                textColor="text-blue-700" 
+              />
+              <SummaryCard 
+                title="Patients Discharged" 
+                value="15" 
+                icon="📤" 
+                color="bg-green-100" 
+                textColor="text-green-700" 
+              />
+              <SummaryCard 
+                title="Inventory Alerts" 
+                value="2 critical" 
+                icon="📦" 
+                color="bg-red-100" 
+                textColor="text-red-700" 
+              />
+            </div>
+            
+            {/* Bed Occupancy Analysis */}
+            <Section title="Bed Occupancy Analysis">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <OccupancyItem ward="Ward A" percentage={85} critical={true} />
+                <OccupancyItem ward="Ward B" percentage={68} />
+                <OccupancyItem ward="ICU" percentage={90} critical={true} />
+                <OccupancyItem ward="General" percentage={50} />
+              </div>
+            </Section>
+            
+            {/* Recent Admissions and Inventory Alerts */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+              <Section title="Recent Admissions">
+                <ul className="divide-y divide-gray-200">
+                  <ListItem text="John Doe" subtext="Ward B" />
+                  <ListItem text="Jane Smith" subtext="ICU" status="critical" />
+                  <ListItem text="Michael Brown" subtext="General" />
+                </ul>
+              </Section>
+              
+              <Section title="Inventory Alerts">
+                <ul className="divide-y divide-gray-200">
+                  <ListItem text="Gloves" subtext="Low stock" status="warning" />
+                  <ListItem text="Saline" subtext="Out of stock" status="critical" />
+                  <ListItem text="Masks" subtext="Running low" status="warning" />
+                </ul>
+              </Section>
+            </div>
+          </>
+        );
+    }
+  };
+  
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-white">
-      {/* Improved Navbar */}
+      {/* Navbar */}
       <nav className="bg-white shadow-lg p-4 flex flex-col md:flex-row md:justify-between md:items-center sticky top-0 z-10 border-b border-gray-200">
         <div className="flex items-center justify-between mb-4 md:mb-0">
           <div className="flex items-center">
@@ -33,62 +103,7 @@ const HospitalDashboard = () => {
       
       {/* Main Content */}
       <main className="p-6 md:p-8 max-w-7xl mx-auto">
-        {/* Date */}
-        <h1 className="text-2xl md:text-3xl font-bold text-gray-800 mb-6">Dashboard – {today}</h1>
-        
-        {/* Summary Cards - Improved styling and spacing */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-10">
-          <SummaryCard 
-            title="Bed Occupancy" 
-            value="72%" 
-            icon="🛏️" 
-            color="bg-blue-100" 
-            textColor="text-blue-700" 
-          />
-          <SummaryCard 
-            title="Patients Discharged" 
-            value="15" 
-            icon="📤" 
-            color="bg-green-100" 
-            textColor="text-green-700" 
-          />
-          <SummaryCard 
-            title="Inventory Alerts" 
-            value="2 critical" 
-            icon="📦" 
-            color="bg-red-100" 
-            textColor="text-red-700" 
-          />
-        </div>
-        
-        {/* Bed Occupancy Analysis */}
-        <Section title="Bed Occupancy Analysis">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <OccupancyItem ward="Ward A" percentage={85} critical={true} />
-            <OccupancyItem ward="Ward B" percentage={68} />
-            <OccupancyItem ward="ICU" percentage={90} critical={true} />
-            <OccupancyItem ward="General" percentage={50} />
-          </div>
-        </Section>
-        
-        {/* Recent Admissions and Inventory Alerts */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
-          <Section title="Recent Admissions">
-            <ul className="divide-y divide-gray-200">
-              <ListItem text="John Doe" subtext="Ward B" />
-              <ListItem text="Jane Smith" subtext="ICU" status="critical" />
-              <ListItem text="Michael Brown" subtext="General" />
-            </ul>
-          </Section>
-          
-          <Section title="Inventory Alerts">
-            <ul className="divide-y divide-gray-200">
-              <ListItem text="Gloves" subtext="Low stock" status="warning" />
-              <ListItem text="Saline" subtext="Out of stock" status="critical" />
-              <ListItem text="Masks" subtext="Running low" status="warning" />
-            </ul>
-          </Section>
-        </div>
+        {renderContent()}
       </main>
     </div>
   );

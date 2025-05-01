@@ -45,6 +45,7 @@ function App() {
       <BrowserRouter>
         <Routes>
 
+        <Route path="/L" element={<LandingPage />} />
           <Route path="/location" element={<Location />} />
           <Route path="/patientform" element={<PatientForm />} /> 
           <Route path="/dashboard" element={<Dashboard />} />   
