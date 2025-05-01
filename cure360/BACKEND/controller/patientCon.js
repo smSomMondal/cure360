@@ -8,7 +8,7 @@ import expressAsyncHandler from 'express-async-handler';
 const addPatient = expressAsyncHandler(async (req, res) => {
     try {
 
-        if (req.user._id) {
+        if (req.user._id && req.user.role === "patient") {
             const {
                 name,
                 age,
@@ -16,6 +16,8 @@ const addPatient = expressAsyncHandler(async (req, res) => {
                 gender,
                 height,
                 address,
+                bloodGroup,
+                emergencyContact
             } = req.body;
 
             const newPatient = new Patient({
@@ -25,6 +27,8 @@ const addPatient = expressAsyncHandler(async (req, res) => {
                 gender,
                 height,
                 address,
+                bloodGroup,
+                emergencyContact
             });
 
             const savedPatient = await newPatient.save();
@@ -35,7 +39,7 @@ const addPatient = expressAsyncHandler(async (req, res) => {
             const newUser = await User.findOne({ _id: req.user._id }).select("-password");
 
 
-            res.status(201).json({
+            res.status(200).json({
                 success: true,
                 message: "Patient created successfully",
                 data: { savedPatient, newUser }
@@ -56,7 +60,9 @@ const addPatient = expressAsyncHandler(async (req, res) => {
 const addAppointmentRequest = expressAsyncHandler(async (req, res) => {
     try {
         const { patientId, appDocId, ApplDate, vesiteDate, PatInfo,problem } = req.body;
-
+        if ( !req.user._id) {
+            return res.status(401).json({ success: false, message: "Unauthorized" });
+        }
         if (!patientId || !appDocId || !ApplDate || !vesiteDate || !PatInfo || !problem) {
             return res.status(400).json({
                 success: false,

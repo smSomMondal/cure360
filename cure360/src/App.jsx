@@ -1,5 +1,5 @@
 import LandingPage from "./LandingPage";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, redirect, Navigate, Outlet } from "react-router-dom";
 import Dashboard from "./pages/Dashboard";
 import Home from "./pages/Home";
 import Chat from "./pages/Chat";
@@ -13,12 +13,38 @@ import PatientForm from "./pages/patientform";
 import HospitalLandingPage from "./pages/BookHospitalPage";
 import HospitalSelection from "./pages/Hospitalselection";
 import HospitalDashboard from "./pages/Hospitaldashboard";
+import Signup from "./component/loging/Signup";
+import Login from "./component/loging/Login";
+import { useEffect, useState } from "react";
+import { useAuth } from "./context/AuthContex";
+
+const PrivetComponent = () => {
+  const storedUser = localStorage.getItem("user");
+  return storedUser ? <Outlet /> : <Navigate to={'/login'} />
+}
+
+
 function App() {
+
+  const [user1, setUser] = useState();
+  const { user } = useAuth();
+  useEffect(() => {
+    const storedUser = localStorage.getItem("user");
+    if (storedUser) {
+      const parsedUser = JSON.parse(storedUser);
+      setUser(parsedUser.role);
+      console.log("User found in local storage:", parsedUser, user1);
+    } else {
+      console.log("No user1 found in local storage.");
+      redirect('/signup');
+    }
+  }, [user]);
+
   return (
     <ChatProvider>
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<LandingPage />} />
+
           <Route path="/location" element={<Location />} />
           <Route path="/patientform" element={<PatientForm />} /> 
           <Route path="/dashboard" element={<Dashboard />} />   
@@ -30,6 +56,21 @@ function App() {
           <Route path="/appointments-confirmation" element={<AppointmentsConfirmation />} />
           <Route path="/bookhospital" element={<HospitalSelection />} />
           <Route path="/hospitaldashboard" element={<HospitalDashboard />} />
+          <Route path="/signup" element={<Signup />} />
+          <Route path="/login" element={<Login />} />
+
+          <Route element={<PrivetComponent />}>
+            <Route path="/" element={<LandingPage />} />
+            {user1 === "patient" ? (
+              <Route path="/home" element={<Dashboard />} />
+            ) : (<></>)}
+            {user1 === "doctor" ? (
+              <Route path="/home" element={<Dashboard />} />
+            ) : (<></>)}
+            {user1 === "hospital" ? (
+              <Route path="/home" element={<Dashboard />} />
+            ) : (<></>)}
+          </Route>
         </Routes>
       </BrowserRouter>
     </ChatProvider>

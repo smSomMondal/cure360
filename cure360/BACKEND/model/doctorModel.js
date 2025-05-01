@@ -6,16 +6,16 @@ const activeAppointment = new mongoose.Schema({
         required: true,
         ref: 'Patient'
     },
-    PatInfo:{
-        name:{
+    PatInfo: {
+        name: {
             type: String,
             required: true
         },
-        age:{
+        age: {
             type: Number,
             required: true
         },
-        gender:{
+        gender: {
             type: String,
         }
     },
@@ -31,10 +31,10 @@ const activeAppointment = new mongoose.Schema({
         required: true
     },
     appDocId: {
-            type: mongoose.Schema.ObjectId,
-            ref: "Doctor",
-            required: true
-        },
+        type: mongoose.Schema.ObjectId,
+        ref: "Doctor",
+        required: true
+    },
     peAppId: {
         type: mongoose.Schema.Types.ObjectId,
         required: true,
@@ -64,31 +64,40 @@ const doctorSchema = new mongoose.Schema({
         type: Number,
         required: true
     },
+    docLicence: {
+        type: String,
+        required: true
+    },
+    docLicenceUrl: {
+        type: String,
+        required: true
+    },
+    varification: {
+        type: String,
+        default: "pending",
+        enum: ["pending", "accept", "reject"]
+    },
     specialization: {
         type: String,
         required: true,
         enum: [
-          "Cardiology",
-          "Neurology",
-          "Pediatrics",
-          "Orthopedics",
-          "Gynecology",
-          "Oncology",
-          "Dermatology",
-          "Psychiatry",
-          "Radiology",
-          "General Medicine",
-          "ENT",
-          "Urology",
-          "Gastroenterology",
-          "Nephrology"
+            "Cardiology",
+            "Neurology",
+            "Pediatrics",
+            "Orthopedics",
+            "Gynecology",
+            "Oncology",
+            "Dermatology",
+            "Psychiatry",
+            "Radiology",
+            "General Medicine",
+            "ENT",
+            "Urology",
+            "Gastroenterology",
+            "Nephrology"
         ]
-      },
+    },
     address: {
-        street: {
-            type: String,
-            required: true,
-        },
         city: {
             type: String,
             required: true,
@@ -102,10 +111,6 @@ const doctorSchema = new mongoose.Schema({
             required: true,
         },
         pincode: {
-            type: String,
-            required: true,
-        },
-        landmark: {
             type: String,
             required: true,
         },
