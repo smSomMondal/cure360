@@ -3,19 +3,33 @@ import axios from 'axios'
 
 export default function AddDoctor() {
 
-  const [isSubmitting,setIsSubmitting]=useState(false)
+  const [isSubmitting, setIsSubmitting] = useState(false)
+
+  const spc = [
+    "Cardiology",
+    "Neurology",
+    "Pediatrics",
+    "Orthopedics",
+    "Gynecology",
+    "Oncology",
+    "Dermatology",
+    "Psychiatry",
+    "Radiology",
+    "General Medicine",
+    "ENT",
+    "Urology",
+    "Gastroenterology",
+    "Nephrology"
+  ]
+
   const [formData, setFormData] = useState({
     name: '',
     age: '',
-    weight: '',
-    gender: 'male',
-    height: '',
-    bloodGroup: '',
-    emergencyContact: {
-      name: '',
-      phone: '',
-      relation: ''
-    },
+    degree: '',
+    experience: '',
+    docLicence: '',
+    docLicenceUrl: '',
+    specialization: '',
     address: {
       street: '',
       city: '',
@@ -66,31 +80,32 @@ export default function AddDoctor() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      setIsSubmitting(true)
-      const newErrors = validate();
+      console.log("Form data:", formData);
+      // setIsSubmitting(true)
+      /*const newErrors = validate();
 
       if (Object.keys(newErrors).length > 0) {
         setErrors(newErrors);
         return;
-      }
+      }*/
 
       // Here you would normally submit the data to your backend
       console.log("Form data:", formData);
       const storedData = JSON.parse(localStorage.getItem('user'));
       const token = storedData?.token;
-      const Res = await axios.post("http://127.0.0.1:5000/patient/add", formData, {
+      const Res = await axios.post("http://127.0.0.1:5000/doctor/add", formData, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`
         },
       });
       console.log(Res);
-      
+
       // Navigate to dashboard after successful validation
       if (Res.status === 200) {
-        window.location.href = '/dashboard';
+        window.location.href = '/home';
       }
-      
+
     } catch (error) {
       console.log(error);
 
@@ -100,7 +115,7 @@ export default function AddDoctor() {
 
   return (
     <div className="max-w-md mx-auto mt-8 p-6 bg-white rounded-lg shadow-lg">
-      <h2 className="text-2xl font-bold text-center mb-6">Patient Registration Form</h2>
+      <h2 className="text-2xl font-bold text-center mb-6">Doctor Registration Form</h2>
 
       <form onSubmit={handleSubmit} className="space-y-6">
         {/* Personal Information Section */}
@@ -140,80 +155,88 @@ export default function AddDoctor() {
 
             <div>
               <label className="block text-gray-700 text-sm font-medium mb-2">
-                Gender<span className="text-red-500">*</span>
+                degree (kg)<span className="text-red-500">*</span>
               </label>
-              <select
-                name="gender"
-                value={formData.gender}
+              <input
+                type="text"
+                name="degree"
+                value={formData.degree}
                 onChange={handleChange}
                 className="w-full bg-white text-gray-800 border border-gray-300 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 transition duration-200"
-              >
-                <option value="male">Male</option>
-                <option value="female">Female</option>
-                <option value="other">Other</option>
-              </select>
+                placeholder="degree"
+              />
+              {errors.degree && <p className="text-red-500 text-xs mt-1">{errors.weight}</p>}
             </div>
           </div>
 
           <div className="grid grid-cols-2 gap-4">
             <div>
               <label className="block text-gray-700 text-sm font-medium mb-2">
-                Weight (kg)<span className="text-red-500">*</span>
+                Experience<span className="text-red-500">*</span>
               </label>
               <input
                 type="number"
-                name="weight"
-                value={formData.weight}
+                name="experience"
+                value={formData.experience}
                 onChange={handleChange}
                 className="w-full bg-white text-gray-800 border border-gray-300 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 transition duration-200"
                 placeholder="Weight"
               />
-              {errors.weight && <p className="text-red-500 text-xs mt-1">{errors.weight}</p>}
+              {errors.experience && <p className="text-red-500 text-xs mt-1">{errors.weight}</p>}
             </div>
 
             <div>
               <label className="block text-gray-700 text-sm font-medium mb-2">
-                Height (cm)<span className="text-red-500">*</span>
+                specialization
               </label>
-              <input
-                type="number"
-                name="height"
-                value={formData.height}
+              <select
+                name="specialization"
+                value={formData.specialization}
                 onChange={handleChange}
-                className="w-full bg-white text-gray-800 border border-gray-300 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 transition duration-200"
-                placeholder="Height"
-              />
-              {errors.height && <p className="text-red-500 text-xs mt-1">{errors.height}</p>}
+                className="w-full border border-black bg-white text-black p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+              >
+                {spc.map((i) => (
+                  <option value={i}>{i}</option>
+                ))}
+              </select>
             </div>
+
           </div>
 
           <div className="grid grid-cols-2 gap-4">
             <div>
               <label className="block text-gray-700 text-sm font-medium mb-2">
-                Blood Group
+                docLicence<span className="text-red-500">*</span>
               </label>
-              <select
-                name="bloodGroup"
-                value={formData.bloodGroup}
+              <input
+                type="text"
+                name="docLicence"
+                value={formData.docLicence}
                 onChange={handleChange}
-                className="w-full border border-black bg-white text-black p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-              >
-                <option value="A+">A+</option>
-                <option value="A-">A-</option>
-                <option value="B+">B+</option>
-                <option value="B-">B-</option>
-                <option value="AB+">AB+</option>
-                <option value="AB-">AB-</option>
-                <option value="O+">O+</option>
-                <option value="O-">O-</option>
-                <option value="OTHERS">OTHERS</option>
-                <option value="Unknown">Unknown</option>
-              </select>
+                className="w-full bg-white text-gray-800 border border-gray-300 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 transition duration-200"
+                placeholder="Height"
+              />
+              {errors.docLicence && <p className="text-red-500 text-xs mt-1">{errors.height}</p>}
+            </div>
+
+            <div>
+              <label className="block text-gray-700 text-sm font-medium mb-2">
+                docLicenceUrl<span className="text-red-500">*</span>
+              </label>
+              <input
+                type="text"
+                name="docLicenceUrl"
+                value={formData.docLicenceUrl}
+                onChange={handleChange}
+                className="w-full bg-white text-gray-800 border border-gray-300 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 transition duration-200"
+                placeholder="Height"
+              />
+              {errors.docLicenceUrl && <p className="text-red-500 text-xs mt-1">{errors.height}</p>}
             </div>
           </div>
         </div>
         {/*emergency contact */}
-        <div className="bg-gray-50 p-5 rounded-md">
+        {/* <div className="bg-gray-50 p-5 rounded-md">
           <h3 className="text-lg font-medium mb-4">Emmergency Information</h3>
 
           <div className="mb-4">
@@ -261,7 +284,7 @@ export default function AddDoctor() {
           </div>
 
 
-        </div>
+        </div> */}
         {/* Address Section */}
         <div className="bg-gray-50 p-5 rounded-md">
           <h3 className="text-lg font-medium mb-4">Address Information</h3>
