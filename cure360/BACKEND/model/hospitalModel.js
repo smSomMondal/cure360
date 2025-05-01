@@ -45,8 +45,8 @@ const bedTypeEnum = [
     'Isolation',
     'Maternity',
     'Day Care'
-  ];
-  
+];
+
 
 const bedInfo = new mongoose.Schema({
     Type: {
@@ -108,22 +108,35 @@ const hospitalSchema = new mongoose.Schema({
         },
     },
     departments: [{
-        type: String,//dont give
+        type: String,
         enum: departmentEnum
     }],
     facilities: [{
-        type: String,//dont give
+        type: String,
         enum: facilityEnum
     }],
-    isActive: { // dont give
+    isActive: {
         type: Boolean,
         default: true
     },
+    hospitalLicence: {
+        type: String,
+        default: true
+    },
+    hospitalLicenceUrl: {
+        type: String,
+        default: true
+    },
+    varification: {
+        type: String,
+        default: "pending",
+        enum: ["pending", "accept", "reject"]
+    },
     bedInfo: [bedInfo],
-    createdAt: { // dont give
+    createdAt: {
         type: Date,
         default: Date.now
     }
-},{ timestamps: true });
+}, { timestamps: true });
 
 export default mongoose.model('Hospital', hospitalSchema);

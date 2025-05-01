@@ -51,6 +51,22 @@ const patientSchema = new mongoose.Schema({
         type: Number,
         required: true
     },
+    bloodGroup: {
+        type: String,
+        enum: ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-', 'OTHERS', 'Unknown'],
+        default: 'Unknown'
+    },
+    emergencyContact: {
+        name: {
+            type: String
+        },
+        phone: {
+            type: String
+        },
+        relation: {
+            type: String
+        }
+    },
     address: {
         street: {
             type: String,
@@ -74,3 +90,14 @@ const patientSchema = new mongoose.Schema({
 }, { timestamps: true });
 
 export default mongoose.model("Patient", patientSchema);
+
+/*
+we will add 
+
+allages
+priviou segerys
+chronic diseases
+medicines
+insurance details
+
+*/

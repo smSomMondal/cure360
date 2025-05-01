@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import axios from 'axios'
 
 export default function PatientForm() {
   const [formData, setFormData] = useState({
@@ -7,6 +8,12 @@ export default function PatientForm() {
     weight: '',
     gender: 'male',
     height: '',
+    bloodGroup: '',
+    emergencyContact: {
+      name: '',
+      phone: '',
+      relation: ''
+    },
     address: {
       street: '',
       city: '',
@@ -15,13 +22,12 @@ export default function PatientForm() {
       pincode: ''
     }
   });
-  
+
   const [errors, setErrors] = useState({});
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  
+
   const handleChange = (e) => {
     const { name, value } = e.target;
-    
+
     if (name.includes('.')) {
       const [parent, child] = name.split('.');
       setFormData({
@@ -38,61 +44,67 @@ export default function PatientForm() {
       });
     }
   };
-  
+
   const validate = () => {
     const newErrors = {};
-    
+
     if (!formData.name.trim()) newErrors.name = "Name is required";
     if (!formData.age) newErrors.age = "Age is required";
     else if (isNaN(formData.age) || formData.age <= 0) newErrors.age = "Age must be a positive number";
-    
+
     if (!formData.weight) newErrors.weight = "Weight is required";
     else if (isNaN(formData.weight) || formData.weight <= 0) newErrors.weight = "Weight must be a positive number";
-    
+
     if (!formData.height) newErrors.height = "Height is required";
     else if (isNaN(formData.height) || formData.height <= 0) newErrors.height = "Height must be a positive number";
-    
+
     return newErrors;
   };
-  
-  const handleSubmit = (e) => {
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    const newErrors = validate();
-    
-    if (Object.keys(newErrors).length > 0) {
-      setErrors(newErrors);
-      return;
-    }
-    
-    setIsSubmitting(true);
-    
-    // Simulate API call
-    setTimeout(() => {
+    try {
+      const newErrors = validate();
+
+      if (Object.keys(newErrors).length > 0) {
+        setErrors(newErrors);
+        return;
+      }
+
+      // Here you would normally submit the data to your backend
       console.log("Form data:", formData);
-      window.location.href = '/dashboard';
-    }, 1000);
-  };
-  
-  return (
-    <div className="max-w-2xl mx-auto my-12 p-8 bg-white rounded-xl shadow-lg">
-      <div className="mb-8 text-center">
-        <h2 className="text-3xl font-bold text-indigo-700">Patient Registration</h2>
-        <p className="text-gray-600 mt-2">Please fill in the patient information below</p>
-      </div>
+      const storedData = JSON.parse(localStorage.getItem('user'));
+      const token = storedData?.token;
+      const Res = await axios.post("http://127.0.0.1:5000/patient/add", formData, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`
+        },
+      });
+      console.log(Res);
       
-      <form onSubmit={handleSubmit} className="space-y-8">
+      // Navigate to dashboard after successful validation
+      if (Res.status === 200) {
+        window.location.href = '/dashboard';
+      }
+      
+    } catch (error) {
+      console.log(error);
+
+    }
+
+  };
+
+  return (
+    <div className="max-w-md mx-auto mt-8 p-6 bg-white rounded-lg shadow-lg">
+      <h2 className="text-2xl font-bold text-center mb-6">Patient Registration Form</h2>
+
+      <form onSubmit={handleSubmit} className="space-y-6">
         {/* Personal Information Section */}
-        <div className="bg-indigo-50 p-6 rounded-xl border border-indigo-100">
-          <div className="flex items-center mb-5">
-            <div className="w-10 h-10 bg-indigo-600 rounded-full flex items-center justify-center mr-3">
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-              </svg>
-            </div>
-            <h3 className="text-xl font-semibold text-indigo-800">Personal Information</h3>
-          </div>
-          
-          <div className="mb-5">
+        <div className="bg-gray-50 p-5 rounded-md">
+          <h3 className="text-lg font-medium mb-4">Personal Information</h3>
+
+          <div className="mb-4">
             <label className="block text-gray-700 text-sm font-medium mb-2">
               Full Name<span className="text-red-500">*</span>
             </label>
@@ -106,8 +118,8 @@ export default function PatientForm() {
             />
             {errors.name && <p className="text-red-500 text-xs mt-1">{errors.name}</p>}
           </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-5">
+
+          <div className="grid grid-cols-2 gap-4 mb-4">
             <div>
               <label className="block text-gray-700 text-sm font-medium mb-2">
                 Age (years)<span className="text-red-500">*</span>
@@ -122,7 +134,7 @@ export default function PatientForm() {
               />
               {errors.age && <p className="text-red-500 text-xs mt-1">{errors.age}</p>}
             </div>
-            
+
             <div>
               <label className="block text-gray-700 text-sm font-medium mb-2">
                 Gender<span className="text-red-500">*</span>
@@ -139,8 +151,8 @@ export default function PatientForm() {
               </select>
             </div>
           </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+
+          <div className="grid grid-cols-2 gap-4">
             <div>
               <label className="block text-gray-700 text-sm font-medium mb-2">
                 Weight (kg)<span className="text-red-500">*</span>
@@ -155,7 +167,7 @@ export default function PatientForm() {
               />
               {errors.weight && <p className="text-red-500 text-xs mt-1">{errors.weight}</p>}
             </div>
-            
+
             <div>
               <label className="block text-gray-700 text-sm font-medium mb-2">
                 Height (cm)<span className="text-red-500">*</span>
@@ -171,21 +183,87 @@ export default function PatientForm() {
               {errors.height && <p className="text-red-500 text-xs mt-1">{errors.height}</p>}
             </div>
           </div>
-        </div>
-        
-        {/* Address Section */}
-        <div className="bg-indigo-50 p-6 rounded-xl border border-indigo-100">
-          <div className="flex items-center mb-5">
-            <div className="w-10 h-10 bg-indigo-600 rounded-full flex items-center justify-center mr-3">
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-              </svg>
+
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-gray-700 text-sm font-medium mb-2">
+                Blood Group
+              </label>
+              <select
+                name="bloodGroup"
+                value={formData.bloodGroup}
+                onChange={handleChange}
+                className="w-full border border-black bg-white text-black p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+              >
+                <option value="A+">A+</option>
+                <option value="A-">A-</option>
+                <option value="B+">B+</option>
+                <option value="B-">B-</option>
+                <option value="AB+">AB+</option>
+                <option value="AB-">AB-</option>
+                <option value="O+">O+</option>
+                <option value="O-">O-</option>
+                <option value="OTHERS">OTHERS</option>
+                <option value="Unknown">Unknown</option>
+              </select>
             </div>
-            <h3 className="text-xl font-semibold text-indigo-800">Address Information</h3>
           </div>
-          
-          <div className="mb-5">
+        </div>
+        {/*emergency contact */}
+        <div className="bg-gray-50 p-5 rounded-md">
+          <h3 className="text-lg font-medium mb-4">Emmergency Information</h3>
+
+          <div className="mb-4">
+            <label className="block text-gray-700 text-sm font-medium mb-2">
+              Name
+            </label>
+            <input
+              type="text"
+              name="emergencyContact.name"
+              value={formData.emergencyContact.name}
+              onChange={handleChange}
+              className="w-full border border-black bg-white text-black p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+              placeholder="Street address"
+            />
+          </div>
+
+          <div className="grid grid-cols-2 gap-4 mb-4">
+            <div>
+              <label className="block text-gray-700 text-sm font-medium mb-2">
+                Phone no
+              </label>
+              <input
+                type="text"
+                name="emergencyContact.phone"
+                value={formData.emergencyContact.phone}
+                onChange={handleChange}
+                className="w-full border border-black bg-white text-black p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                placeholder="City"
+              />
+            </div>
+
+            <div>
+              <label className="block text-gray-700 text-sm font-medium mb-2">
+                Relation
+              </label>
+              <input
+                type="text"
+                name="emergencyContact.relation"
+                value={formData.emergencyContact.relation}
+                onChange={handleChange}
+                className="w-full border border-black bg-white text-black p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                placeholder="State"
+              />
+            </div>
+          </div>
+
+
+        </div>
+        {/* Address Section */}
+        <div className="bg-gray-50 p-5 rounded-md">
+          <h3 className="text-lg font-medium mb-4">Address Information</h3>
+
+          <div className="mb-4">
             <label className="block text-gray-700 text-sm font-medium mb-2">
               Street Address
             </label>
@@ -198,8 +276,8 @@ export default function PatientForm() {
               placeholder="Street address"
             />
           </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-5">
+
+          <div className="grid grid-cols-2 gap-4 mb-4">
             <div>
               <label className="block text-gray-700 text-sm font-medium mb-2">
                 City
@@ -213,7 +291,7 @@ export default function PatientForm() {
                 placeholder="City"
               />
             </div>
-            
+
             <div>
               <label className="block text-gray-700 text-sm font-medium mb-2">
                 State/Province
@@ -228,8 +306,8 @@ export default function PatientForm() {
               />
             </div>
           </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+
+          <div className="grid grid-cols-2 gap-4">
             <div>
               <label className="block text-gray-700 text-sm font-medium mb-2">
                 Country
@@ -243,7 +321,7 @@ export default function PatientForm() {
                 placeholder="Country"
               />
             </div>
-            
+
             <div>
               <label className="block text-gray-700 text-sm font-medium mb-2">
                 Postal/ZIP Code
@@ -259,7 +337,7 @@ export default function PatientForm() {
             </div>
           </div>
         </div>
-        
+
         <div>
           <button
             type="submit"
