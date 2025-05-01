@@ -9,11 +9,16 @@ import BookDoctor from "./pages/BookDoctor";
 import BookAppointment from "./pages/BookAppointment";
 import AppointmentsConfirmation from "./pages/AppointmentsConfirmation";
 import { Book } from "lucide-react";
-import PatientForm from "./pages/PatientForm";
+import PatientForm from "./pages/patientform";
+import HospitalLandingPage from "./pages/BookHospitalPage";
+import HospitalSelection from "./pages/Hospitalselection";
+import HospitalDashboard from "./pages/Hospitaldashboard";
 import Signup from "./component/loging/Signup";
 import Login from "./component/loging/Login";
+import Doctor from "./doctor/Doctor";
 import { useEffect, useState } from "react";
 import { useAuth } from "./context/AuthContex";
+import AddDoctor from "./doctor/AddDoctor";
 
 
 import AI from "./AI";
@@ -46,13 +51,17 @@ function App() {
         <Routes>
 
           <Route path="/location" element={<Location />} />
-          <Route path="/patientform" element={<PatientForm />} />
-          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/patientform" element={<PatientForm />} /> 
+          <Route path="/dashboard" element={<Dashboard />} />   
+          <Route path="/hospital" element={<HospitalLandingPage/>} />   
           <Route path="/doctors" element={<BookDoctor />} />
+          <Route path="/d" element={<Doctor />} />
           <Route path="/chatbot" element={<Home />} />
           <Route path="/chatbot/chat" element={<Chat />} />
           <Route path="/book-appointment" element={<BookAppointment />} />
           <Route path="/appointments-confirmation" element={<AppointmentsConfirmation />} />
+          <Route path="/bookhospital" element={<HospitalSelection />} />
+          <Route path="/hospitaldashboard" element={<HospitalDashboard />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/login" element={<Login />} />
           <Route path="/AI" element={<AI />} />
@@ -63,7 +72,10 @@ function App() {
               <Route path="/home" element={<Dashboard />} />
             ) : (<></>)}
             {user1 === "doctor" ? (
-              <Route path="/home" element={<Dashboard />} />
+              <>
+              <Route path="/home" element={<Doctor />} />
+              <Route path="/addDoctor" element={<AddDoctor/>} />
+              </>              
             ) : (<></>)}
             {user1 === "hospital" ? (
               <Route path="/home" element={<Dashboard />} />
