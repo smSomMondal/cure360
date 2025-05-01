@@ -9,11 +9,14 @@ import BookDoctor from "./pages/BookDoctor";
 import BookAppointment from "./pages/BookAppointment";
 import AppointmentsConfirmation from "./pages/AppointmentsConfirmation";
 import { Book } from "lucide-react";
-import PatientForm from "./pages/patientform";
+import PatientForm from "./pages/PatientForm";
 import Signup from "./component/loging/Signup";
 import Login from "./component/loging/Login";
 import { useEffect, useState } from "react";
 import { useAuth } from "./context/AuthContex";
+
+
+import AI from "./AI";
 
 const PrivetComponent = () => {
   const storedUser = localStorage.getItem("user");
@@ -52,6 +55,7 @@ function App() {
           <Route path="/appointments-confirmation" element={<AppointmentsConfirmation />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/AI" element={<AI />} />
 
           <Route element={<PrivetComponent />}>
             <Route path="/" element={<LandingPage />} />
