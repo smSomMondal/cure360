@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import axios from 'axios'
 
-export default function PatientForm() {
+export default function AddDoctor() {
 
   const [isSubmitting,setIsSubmitting]=useState(false)
   const [formData, setFormData] = useState({
