@@ -232,4 +232,4 @@ const appointCantList = async (req, res) => {
 
 }
 
-export { addDoctor , getDoctor,appointList,approvedAppointment,appointCancel};
+export { addDoctor , getDoctor,appointList,approvedAppointment,appointCantList};
