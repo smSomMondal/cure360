@@ -1,7 +1,6 @@
 import Doctor from '../model/doctorModel.js';
 import User from '../model/userModel.js' // Adjust the path based on your structure
 import Patient from '../model/patientModel.js';
-import mongoose from 'mongoose';
 // Create a new doctor
 const addDoctor = async (req, res) => {
     try {
@@ -11,15 +10,28 @@ const addDoctor = async (req, res) => {
                 name,
                 age,
                 degree,
-                department,
+                experience,
+                docLicence,
+                docLicenceUrl,
+                specialization,
                 address,
             } = req.body;
 
+
+            if(req.user.role!=='doctor' || !!req.user.typeId){
+                return res.state(400).json({
+                    success:false,
+                    massage:"not a doctor or doctor exist"
+                })
+            }
             const newDoctor = new Doctor({
                 name,
                 age,
                 degree,
-                department,
+                experience,
+                docLicence,
+                docLicenceUrl,
+                specialization,
                 address,
             });
 
@@ -31,9 +43,9 @@ const addDoctor = async (req, res) => {
             const newUser = await User.findOne({ _id: req.user._id }).select("-password");
 
 
-            res.status(201).json({
+            res.status(200).json({
                 success: true,
-                message: "Patient created successfully",
+                message: "doctor created successfully",
                 data: {saveDocroe,newUser}
             });
         }
