@@ -7,11 +7,7 @@ export default function HospitalLandingPage() {
   const handleStartClick = () => {
     // In a real application, navigate to hospital selection page
     console.log("Navigate to hospital selection page");
-    // Example: history.push('/hospitals/select');
-    setIsStarted(true);
-    setTimeout(() => {
-      alert("Navigating to hospital selection page");
-    }, 500);
+    
   };
 
   return (

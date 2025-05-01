@@ -12,6 +12,7 @@ import { Book } from "lucide-react";
 import PatientForm from "./pages/patientform";
 import HospitalLandingPage from "./pages/BookHospitalPage";
 import HospitalSelection from "./pages/Hospitalselection";
+import HospitalDashboard from "./pages/Hospitaldashboard";
 function App() {
   return (
     <ChatProvider>
@@ -28,6 +29,7 @@ function App() {
           <Route path="/book-appointment" element={<BookAppointment />} />
           <Route path="/appointments-confirmation" element={<AppointmentsConfirmation />} />
           <Route path="/bookhospital" element={<HospitalSelection />} />
+          <Route path="/hospitaldashboard" element={<HospitalDashboard />} />
         </Routes>
       </BrowserRouter>
     </ChatProvider>

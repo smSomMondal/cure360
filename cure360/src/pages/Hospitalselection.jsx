@@ -68,11 +68,14 @@ export default function HospitalSelection() {
   );
 
   const handleHospitalClick = (hospitalId) => {
-    // In a real application, navigate to the hospital dashboard
-    console.log(`Navigate to hospital dashboard for ID: ${hospitalId}`);
-    // Example: history.push(`/hospital/${hospitalId}`);
-    alert(`Navigating to hospital dashboard for ${hospitalId}`);
-  };
+  // Navigate to the hospital dashboard
+  window.location.href = `/hospitaldashboard`;
+  
+  // If you're using React Router, use this instead:
+  // history.push(`/hospital/${hospitalId}`);
+  // or with newer versions of React Router:
+  // navigate(`/hospital/${hospitalId}`);
+};
 
   return (
     <div className="bg-gray-50 min-h-screen p-6">
