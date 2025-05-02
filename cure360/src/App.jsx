@@ -12,7 +12,6 @@ import { Book } from "lucide-react";
 import PatientForm from "./pages/patientform";
 import HospitalLandingPage from "./pages/BookHospitalPage";
 import HospitalSelection from "./pages/Hospitalselection";
-import HospitalDashboard from "./pages/Hospitaldashboard";
 import Signup from "./component/loging/Signup";
 import Login from "./component/loging/Login";
 import Doctor from "./doctor/Doctor";
@@ -62,7 +61,6 @@ function App() {
           <Route path="/book-appointment" element={<BookAppointment />} />
           <Route path="/appointments-confirmation" element={<AppointmentsConfirmation />} />
           <Route path="/bookhospital" element={<HospitalSelection />} />
-          <Route path="/hospitaldashboard" element={<HospitalDashboard />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/login" element={<Login />} />
           <Route path="/AI" element={<AI />} />

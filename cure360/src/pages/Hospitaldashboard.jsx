@@ -116,65 +116,108 @@ const SummaryCard = ({ title, value, icon, color, textColor }) => (
         <span className="text-2xl mr-2">{icon}</span>
         <h3 className={`text-md font-medium ${textColor}`}>{title}</h3>
       </div>
-      <p className="text-3xl font-bold text-gray-800">{value}</p>
+      
+      {/* Charts Section */}
+      <div className="container mx-auto mt-8 px-4 grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* Bar Chart */}
+        <div className="bg-white rounded-lg shadow-md p-6">
+          <h2 className="text-lg font-semibold mb-4">Bed Availability by Ward</h2>
+          <div className="h-64">
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart
+                data={barChartData}
+                margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
+              >
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="name" />
+                <YAxis />
+                <Tooltip />
+                <Legend />
+                <Bar dataKey="Available" fill="#4ADE80" />
+                <Bar dataKey="Occupied" fill="#FB7185" />
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
+        
+        {/* Pie Chart */}
+        <div className="bg-white rounded-lg shadow-md p-6">
+          <h2 className="text-lg font-semibold mb-4">Overall Bed Status</h2>
+          <div className="h-64">
+            <ResponsiveContainer width="100%" height="100%">
+              <PieChart>
+                <Pie
+                  data={pieChartData}
+                  cx="50%"
+                  cy="50%"
+                  labelLine={false}
+                  outerRadius={80}
+                  fill="#8884d8"
+                  dataKey="value"
+                  label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
+                >
+                  {pieChartData.map((entry, index) => (
+                    <Cell key={`cell-${index}`} fill={index === 0 ? '#4ADE80' : '#FB7185'} />
+                  ))}
+                </Pie>
+                <Tooltip />
+              </PieChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
+      </div>
+      
+      {/* Detailed Ward Table */}
+      <div className="container mx-auto mt-8 px-4 mb-8">
+        <div className="bg-white rounded-lg shadow-md overflow-hidden">
+          <div className="p-4 border-b border-gray-200">
+            <h2 className="text-lg font-semibold">Ward Details</h2>
+          </div>
+          <div className="overflow-x-auto">
+            <table className="min-w-full divide-y divide-gray-200">
+              <thead className="bg-gray-50">
+                <tr>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Ward</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Total Beds</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Occupied</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Available</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                </tr>
+              </thead>
+              <tbody className="bg-white divide-y divide-gray-200">
+                {Object.keys(data).map((ward) => (
+                  <tr key={ward}>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                      {ward.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase())}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{data[ward].total}</td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{data[ward].occupied}</td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{data[ward].available}</td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
+                        data[ward].available === 0 ? 'bg-red-100 text-red-800' : 
+                        data[ward].available < 5 ? 'bg-yellow-100 text-yellow-800' : 
+                        'bg-green-100 text-green-800'
+                      }`}>
+                        {data[ward].available === 0 ? 'Full' : 
+                         data[ward].available < 5 ? 'Limited' : 
+                         'Available'}
+                      </span>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      
+      {/* Action Button */}
+      <div className="fixed bottom-6 right-6">
+        <button className="bg-blue-600 hover:bg-blue-700 text-white rounded-full p-4 shadow-lg flex items-center justify-center">
+          <PlusCircle className="h-6 w-6" />
+        </button>
+      </div>
     </div>
   </div>
-);
-
-const Section = ({ title, children }) => (
-  <section className="bg-white rounded-xl shadow-md p-6 border border-gray-100">
-    <h2 className="text-xl font-semibold text-gray-800 mb-4 pb-2 border-b border-gray-100">{title}</h2>
-    {children}
-  </section>
-);
-
-const NavButton = ({ label, active, onClick }) => (
-  <button 
-    className={`py-2 px-1 transition-all duration-200 border-b-2 ${
-      active 
-        ? "text-blue-600 border-blue-600 font-semibold" 
-        : "text-gray-700 border-transparent hover:text-blue-600 hover:border-blue-300"
-    }`}
-    onClick={onClick}
-  >
-    {label}
-  </button>
-);
-
-const OccupancyItem = ({ ward, percentage, critical }) => {
-  let barColor = "bg-green-500";
-  if (percentage > 80) barColor = "bg-red-500";
-  else if (percentage > 60) barColor = "bg-yellow-500";
-  
-  return (
-    <div className="bg-white rounded-lg p-4 shadow-sm border border-gray-100">
-      <div className="flex justify-between items-center mb-2">
-        <span className="font-medium text-gray-700">{ward}</span>
-        <span className={`font-semibold ${critical ? "text-red-600" : "text-gray-900"}`}>
-          {percentage}%
-        </span>
-      </div>
-      <div className="w-full bg-gray-200 rounded-full h-2">
-        <div 
-          className={`${barColor} h-2 rounded-full`} 
-          style={{ width: `${percentage}%` }}
-        ></div>
-      </div>
-    </div>
-  );
-};
-
-const ListItem = ({ text, subtext, status }) => {
-  let statusColor = "";
-  if (status === "critical") statusColor = "text-red-600";
-  else if (status === "warning") statusColor = "text-yellow-600";
-  
-  return (
-    <li className="py-3 flex justify-between items-center">
-      <span className={`font-medium ${statusColor}`}>{text}</span>
-      <span className="text-sm text-gray-500">{subtext}</span>
-    </li>
-  );
-};
-
-export default HospitalDashboard;
+  );  
