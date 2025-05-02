@@ -29,9 +29,9 @@ import AddHospitalForm from "./hospital/AddHospital";
 import BedManagement from "./pages/BedManagement";
 import HospitalDashboard from "./pages/Hospitaldashboard";
 import HospitalFront from "./hospital/HospitalDashboard";
-
+import HealthCheckPage from "./pages/HealthCheck";
 import QueueManagement from "./pages/QueueManagement";
-
+import RiskAssessmentPage from "./pages/RiskAssessmentPage";
 import AI from "./AI";
 
 const PrivetComponent = () => {
@@ -73,11 +73,13 @@ function App() {
             path="/appointments-confirmation"
             element={<AppointmentsConfirmation />}
           />
+          <Route path="/risk-assessment" element={<RiskAssessmentPage />} />
           <Route path="/bookhospital" element={<HospitalSelection />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/login" element={<Login />} />
           <Route path="/AI" element={<AI />} />
           <Route path="/hospitaldashboard" element={<HospitalDashboard />} />
+          <Route path="/healthscorechecker" element={< HealthCheckPage/>} />
           <Route path="/bedmanagement" element={<BedManagement />} />
           <Route path="/queuemanagement" element={<QueueManagement />} />
           <Route element={<PrivetComponent />}>
