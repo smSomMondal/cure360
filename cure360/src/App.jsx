@@ -27,8 +27,12 @@ import HospitalFront from "./hospital/HospitalDashboard";
 
 import QueueManagement from "./pages/QueueManagement";
 
+import InventoryManagement from "./pages/InventoryManagement";
+
 
 import AI from "./AI";
+import { Inventory2 } from "@mui/icons-material";
+
 
 
 const PrivetComponent = () => {
@@ -77,6 +81,8 @@ function App() {
          <Route path="/bedmanagement" element={< BedManagement/>} />
 
          <Route path="/queuemanagement" element={< QueueManagement/>} />
+
+         <Route path="/inventorymanagement" element={< InventoryManagement/>} />
 
           <Route element={<PrivetComponent />}>
             <Route path="/" element={<LandingPage />} />

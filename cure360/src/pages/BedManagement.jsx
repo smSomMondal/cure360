@@ -1,5 +1,15 @@
 import React, { useState } from "react";
-import { Check, X, Calendar, Clock, UserPlus, Hospital } from "lucide-react";
+import {
+  Check,
+  X,
+  Calendar,
+  Clock,
+  UserPlus,
+  Hospital,
+} from "lucide-react";
+
+
+import { useNavigate } from 'react-router-dom';
 
 const BedManagement = () => {
   const [beds, setBeds] = useState({
@@ -117,7 +127,6 @@ const BedManagement = () => {
     }
   };
 
-  // Component for stats card
   const StatsCard = ({ title, total, available, occupied, icon }) => (
     <div className="bg-white rounded-lg shadow p-4">
       <div className="flex items-center mb-2">
@@ -136,8 +145,28 @@ const BedManagement = () => {
     </div>
   );
 
+   const navigate = useNavigate();
+
   return (
     <div className="p-6 max-w-7xl mx-auto">
+      <div className="flex justify-between mb-6">
+              <div className="flex items-center gap-4">
+                <button
+                  onClick={() => navigate('/home')}
+                  className="bg-gray-200 hover:bg-gray-300 text-gray-800 px-4 py-2 rounded"
+                >
+                  ← Back to Home
+                </button>
+                <h1 className="text-2xl font-bold">Queue Management</h1>
+              </div>
+              <button
+                className="flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+                onClick={() => setOpen(true)}
+              >
+                <UserPlus size={16} />
+                Add Patient
+              </button>
+            </div>
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-bold">Bed Management</h1>
         <button
@@ -194,30 +223,18 @@ const BedManagement = () => {
             <table className="min-w-full bg-white shadow rounded-lg">
               <thead className="bg-gray-50">
                 <tr>
-                  <th className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Bed ID
-                  </th>
-                  <th className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Status
-                  </th>
-                  <th className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Patient Name
-                  </th>
-                  <th className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Admission Date
-                  </th>
-                  <th className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Expected Discharge
-                  </th>
-                  <th className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Actions
-                  </th>
+                  <th className="py-3 px-4">Bed ID</th>
+                  <th className="py-3 px-4">Status</th>
+                  <th className="py-3 px-4">Patient Name</th>
+                  <th className="py-3 px-4">Admission Date</th>
+                  <th className="py-3 px-4">Expected Discharge</th>
+                  <th className="py-3 px-4">Actions</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-200">
                 {beds[dept].beds.map((bed) => (
                   <tr key={bed.id}>
-                    <td className="py-3 px-4 text-sm">{bed.id}</td>
+                    <td className="py-3 px-4">{bed.id}</td>
                     <td className="py-3 px-4">
                       <span
                         className={`px-2 py-1 text-xs font-medium rounded ${
@@ -229,23 +246,26 @@ const BedManagement = () => {
                         {bed.status}
                       </span>
                     </td>
-                    <td className="py-3 px-4 text-sm">
+                    <td className="py-3 px-4">
                       {bed.patient?.name || "-"}
                     </td>
-                    <td className="py-3 px-4 text-sm">
+                    <td className="py-3 px-4">
                       {bed.patient?.admissionDate || "-"}
                     </td>
-                    <td className="py-3 px-4 text-sm">
+                    <td className="py-3 px-4">
                       {bed.patient?.expectedDischarge || "-"}
                     </td>
                     <td className="py-3 px-4">
                       {bed.status === "available" ? (
                         <button
-                          className="p-1 text-blue-600 hover:text-blue-800"
-                          title="Select for assignment"
+                          className="text-blue-600 hover:text-blue-800"
+                          title="Assign Patient"
                           onClick={() => {
                             setSelectedBed(bed.id);
-                            setNewPatient({ ...newPatient, department: dept });
+                            setNewPatient({
+                              ...newPatient,
+                              department: dept,
+                            });
                             setIsDialogOpen(true);
                           }}
                         >
@@ -253,8 +273,8 @@ const BedManagement = () => {
                         </button>
                       ) : (
                         <button
-                          className="p-1 text-red-600 hover:text-red-800"
-                          title="Discharge patient"
+                          className="text-red-600 hover:text-red-800"
+                          title="Discharge Patient"
                           onClick={() => handleDischargeBed(dept, bed.id)}
                         >
                           <X size={18} />
@@ -269,7 +289,7 @@ const BedManagement = () => {
         </div>
       ))}
 
-      {/* Modal Dialog */}
+      {/* Modal Dialog for Assigning Bed */}
       {isDialogOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50">
           <div className="bg-white rounded-lg shadow-lg p-6 w-full max-w-md">
@@ -278,83 +298,64 @@ const BedManagement = () => {
             </h2>
             <div className="space-y-4">
               <div>
-                <label
-                  htmlFor="patientName"
-                  className="block text-sm font-medium text-gray-700 mb-1"
-                >
+                <label className="block text-sm font-medium mb-1">
                   Patient Name
                 </label>
                 <input
                   type="text"
-                  id="patientName"
-                  className="w-full p-2 border border-gray-300 rounded focus:ring-blue-500 focus:border-blue-500"
+                  className="w-full p-2 border border-gray-300 rounded"
                   value={newPatient.name}
                   onChange={(e) =>
                     setNewPatient({ ...newPatient, name: e.target.value })
                   }
                 />
               </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <label
-                    htmlFor="admissionDate"
-                    className="block text-sm font-medium text-gray-700 mb-1"
-                  >
-                    Admission Date
-                  </label>
-                  <input
-                    type="date"
-                    id="admissionDate"
-                    className="w-full p-2 border border-gray-300 rounded focus:ring-blue-500 focus:border-blue-500"
-                    value={newPatient.admissionDate}
-                    onChange={(e) =>
-                      setNewPatient({
-                        ...newPatient,
-                        admissionDate: e.target.value,
-                      })
-                    }
-                  />
-                </div>
-                <div>
-                  <label
-                    htmlFor="dischargeDate"
-                    className="block text-sm font-medium text-gray-700 mb-1"
-                  >
-                    Expected Discharge
-                  </label>
-                  <input
-                    type="date"
-                    id="dischargeDate"
-                    className="w-full p-2 border border-gray-300 rounded focus:ring-blue-500 focus:border-blue-500"
-                    value={newPatient.expectedDischarge}
-                    onChange={(e) =>
-                      setNewPatient({
-                        ...newPatient,
-                        expectedDischarge: e.target.value,
-                      })
-                    }
-                  />
-                </div>
+              <div>
+                <label className="block text-sm font-medium mb-1">
+                  Admission Date
+                </label>
+                <input
+                  type="date"
+                  className="w-full p-2 border border-gray-300 rounded"
+                  value={newPatient.admissionDate}
+                  onChange={(e) =>
+                    setNewPatient({
+                      ...newPatient,
+                      admissionDate: e.target.value,
+                    })
+                  }
+                />
               </div>
-            </div>
-            <div className="mt-6 flex justify-end gap-3">
-              <button
-                className="px-4 py-2 bg-gray-200 text-gray-800 rounded hover:bg-gray-300"
-                onClick={() => setIsDialogOpen(false)}
-              >
-                Cancel
-              </button>
-              <button
-                className={`px-4 py-2 rounded ${
-                  !newPatient.name || !newPatient.expectedDischarge
-                    ? "bg-gray-300 text-gray-500 cursor-not-allowed"
-                    : "bg-blue-600 text-white hover:bg-blue-700"
-                }`}
-                onClick={handleAssignBed}
-                disabled={!newPatient.name || !newPatient.expectedDischarge}
-              >
-                Assign
-              </button>
+              <div>
+                <label className="block text-sm font-medium mb-1">
+                  Expected Discharge
+                </label>
+                <input
+                  type="date"
+                  className="w-full p-2 border border-gray-300 rounded"
+                  value={newPatient.expectedDischarge}
+                  onChange={(e) =>
+                    setNewPatient({
+                      ...newPatient,
+                      expectedDischarge: e.target.value,
+                    })
+                  }
+                />
+              </div>
+              <div className="flex justify-end gap-2">
+                <button
+                  className="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400"
+                  onClick={() => setIsDialogOpen(false)}
+                >
+                  Cancel
+                </button>
+                <button
+                  className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+                  onClick={handleAssignBed}
+                >
+                  Assign
+                </button>
+              </div>
             </div>
           </div>
         </div>

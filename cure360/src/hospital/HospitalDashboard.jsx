@@ -2,6 +2,11 @@
 import React, { useState, useEffect } from 'react';
 import { RefreshCw, Search, Eye, Hospital, Bed, Users, Ambulance } from 'lucide-react';
 
+
+
+// initial landing page 
+import logo1 from '../assets/logo2.png';
+
 const HospitalLandingPage = () => {
   // Sample data for doctors
   const initialDoctors = [
@@ -43,17 +48,17 @@ const HospitalLandingPage = () => {
   const filteredDoctors = doctors.filter(doctor => {
     const departmentMatch = departmentFilter === 'all' || doctor.department.toLowerCase() === departmentFilter.toLowerCase();
     const statusMatch = statusFilter === 'all' || doctor.status === statusFilter;
-    const searchMatch = doctorSearch === '' || 
-                       doctor.name.toLowerCase().includes(doctorSearch.toLowerCase()) || 
-                       doctor.department.toLowerCase().includes(doctorSearch.toLowerCase());
-    
+    const searchMatch = doctorSearch === '' ||
+      doctor.name.toLowerCase().includes(doctorSearch.toLowerCase()) ||
+      doctor.department.toLowerCase().includes(doctorSearch.toLowerCase());
+
     return departmentMatch && statusMatch && searchMatch;
   });
 
   const filteredBeds = beds.filter(bed => {
     const wardMatch = wardFilter === 'all' || bed.ward.toLowerCase().includes(wardFilter.toLowerCase());
     const searchMatch = wardSearch === '' || bed.ward.toLowerCase().includes(wardSearch.toLowerCase());
-    
+
     return wardMatch && searchMatch;
   });
 
@@ -66,17 +71,17 @@ const HospitalLandingPage = () => {
   // Update data function (simulating API call)
   const updateData = () => {
     setIsRefreshing(true);
-    
+
     setTimeout(() => {
       // Update doctors
       const updatedDoctors = doctors.map(doctor => {
         const statuses = ['available', 'busy', 'on-leave'];
         const randomIndex = Math.floor(Math.random() * 10);
-        
+
         if (randomIndex < 3) {
           const newStatus = statuses[Math.floor(Math.random() * statuses.length)];
           let nextAvailable = doctor.nextAvailable;
-          
+
           if (newStatus === 'busy') {
             const hours = Math.floor(Math.random() * 5) + 1;
             const minutes = Math.floor(Math.random() * 60);
@@ -86,29 +91,29 @@ const HospitalLandingPage = () => {
           } else {
             nextAvailable = 'Tomorrow';
           }
-          
+
           return { ...doctor, status: newStatus, nextAvailable };
         }
-        
+
         return doctor;
       });
-      
+
       // Update beds
       const updatedBeds = beds.map(bed => {
         const change = Math.floor(Math.random() * 5) - 2; // -2 to +2
         let occupied = bed.occupied;
-        
+
         if (occupied + change >= 0 && occupied + change <= bed.total) {
           occupied += change;
           const vacant = bed.total - occupied;
           const occupancyRate = Math.round((occupied / bed.total) * 100);
-          
+
           return { ...bed, occupied, vacant, occupancyRate };
         }
-        
+
         return bed;
       });
-      
+
       setDoctors(updatedDoctors);
       setBeds(updatedBeds);
       setIsRefreshing(false);
@@ -122,33 +127,80 @@ const HospitalLandingPage = () => {
 
   return (
     <div className="bg-gray-100 min-h-screen flex flex-col">
-      {/* Header */}
-      <header className="bg-gray-800 text-white sticky top-0 z-10 shadow-md">
-        <div className="container mx-auto px-4 py-4 flex justify-between items-center">
+
+      {/* <header className="bg-gray-200 text- sticky top-0 z-10 shadow-md">
+        <div className="flex justify-between items-center px-6 py-4">
           <div className="flex items-center gap-2 text-xl font-bold">
+          <img src={logo1} alt="CURE360 Logo" className="w-10 h-10" />
+
             <Hospital className="text-blue-500" />
-            <span>CURE360</span>
+           
           </div>
+
           <nav>
-            <ul className="flex gap-6">
-              <li><a href="#" className="text-white hover:text-blue-500 transition-colors">Dashboard</a></li>
+            <ul className="flex gap-12">
               <li><a href="#" className="text-blue-500 border-b-2 border-blue-500">Availability</a></li>
-        
               <li><a href="/bedmanagement" className="text-white hover:text-blue-500 transition-colors">Bed Management</a></li>
               <li><a href="/queuemanagement" className="text-white hover:text-blue-500 transition-colors">Queue Management</a></li>
-              <li><a href="#" className="text-white hover:text-blue-500 transition-colors">Inventory Management</a></li>
+              <li><a href="/inventorymanagement" className="text-white hover:text-blue-500 transition-colors">Inventory Management</a></li>
+            </ul>
+          </nav>
+        </div>
+      </header> */}
+
+
+
+      <header className="bg-gray-200 text-blue-800 sticky top-0 z-10 shadow-md">
+        <div className="flex justify-between items-center px-6 py-4">
+          {/* Logo and Brand Name */}
+          <div className="flex items-center gap-4">
+            {/* Increased the logo size while keeping navbar height the same */}
+            <div className="flex items-center h-16">
+              <img
+                src={logo1}
+                alt="CURE360 Logo"
+                className="h-full w-auto object-contain transform scale-125"
+              />
+            </div>
+          </div>
+          {/* Navigation Menu */}
+          <nav>
+            <ul className="flex gap-10 text-lg font-medium">
+              <li>
+                <a href="#" className="text-blue-600 border-b-2 border-blue-600">
+                  Availability
+                </a>
+              </li>
+              <li>
+                <a href="/bedmanagement" className="text-gray-700 hover:text-blue-600 transition-colors">
+                  Bed Management
+                </a>
+              </li>
+              <li>
+                <a href="/queuemanagement" className="text-gray-700 hover:text-blue-600 transition-colors">
+                  Queue Management
+                </a>
+              </li>
+              <li>
+                <a href="/inventorymanagement" className="text-gray-700 hover:text-blue-600 transition-colors">
+                  Inventory Management
+                </a>
+              </li>
             </ul>
           </nav>
         </div>
       </header>
 
+
+
+
       {/* Main Content */}
-      <main className="flex-grow py-8">
+      <main main className="flex-grow py-8" >
         <div className="container mx-auto px-4">
           {/* Page Title */}
           <div className="flex justify-between items-center mb-6">
             <h1 className="text-2xl font-bold text-gray-800">Availability Dashboard</h1>
-            <button 
+            <button
               className="bg-blue-500 text-white px-4 py-2 rounded flex items-center gap-2 hover:bg-blue-600 transition-colors"
               onClick={updateData}
               disabled={isRefreshing}
@@ -227,13 +279,13 @@ const HospitalLandingPage = () => {
 
           {/* Tabs */}
           <div className="flex gap-4 mb-4 border-b border-gray-200">
-            <div 
+            <div
               className={`px-6 py-3 cursor-pointer ${activeTab === 'doctors' ? 'border-b-2 border-blue-500 text-blue-500 font-medium' : ''}`}
               onClick={() => setActiveTab('doctors')}
             >
               Doctors Availability
             </div>
-            <div 
+            <div
               className={`px-6 py-3 cursor-pointer ${activeTab === 'beds' ? 'border-b-2 border-blue-500 text-blue-500 font-medium' : ''}`}
               onClick={() => setActiveTab('beds')}
             >
@@ -247,7 +299,7 @@ const HospitalLandingPage = () => {
               <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-4 gap-4">
                 <h2 className="text-xl font-bold text-gray-800">Doctors on Duty</h2>
                 <div className="flex flex-col md:flex-row gap-4 w-full md:w-auto">
-                  <select 
+                  <select
                     className="border border-gray-200 rounded p-2 bg-white"
                     value={departmentFilter}
                     onChange={(e) => setDepartmentFilter(e.target.value)}
@@ -259,7 +311,7 @@ const HospitalLandingPage = () => {
                     <option value="pediatrics">Pediatrics</option>
                     <option value="gynecology">Gynecology</option>
                   </select>
-                  <select 
+                  <select
                     className="border border-gray-200 rounded p-2 bg-white"
                     value={statusFilter}
                     onChange={(e) => setStatusFilter(e.target.value)}
@@ -271,9 +323,9 @@ const HospitalLandingPage = () => {
                   </select>
                   <div className="flex items-center gap-2 border border-gray-200 rounded p-2 bg-white w-full md:w-auto">
                     <Search className="h-5 w-5 text-gray-400" />
-                    <input 
-                      type="text" 
-                      placeholder="Search doctors..." 
+                    <input
+                      type="text"
+                      placeholder="Search doctors..."
                       className="outline-none w-full"
                       value={doctorSearch}
                       onChange={(e) => setDoctorSearch(e.target.value)}
@@ -332,7 +384,7 @@ const HospitalLandingPage = () => {
               <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-4 gap-4">
                 <h2 className="text-xl font-bold text-gray-800">Bed Capacity Overview</h2>
                 <div className="flex flex-col md:flex-row gap-4 w-full md:w-auto">
-                  <select 
+                  <select
                     className="border border-gray-200 rounded p-2 bg-white"
                     value={wardFilter}
                     onChange={(e) => setWardFilter(e.target.value)}
@@ -346,9 +398,9 @@ const HospitalLandingPage = () => {
                   </select>
                   <div className="flex items-center gap-2 border border-gray-200 rounded p-2 bg-white w-full md:w-auto">
                     <Search className="h-5 w-5 text-gray-400" />
-                    <input 
-                      type="text" 
-                      placeholder="Search wards..." 
+                    <input
+                      type="text"
+                      placeholder="Search wards..."
                       className="outline-none w-full"
                       value={wardSearch}
                       onChange={(e) => setWardSearch(e.target.value)}
@@ -378,11 +430,10 @@ const HospitalLandingPage = () => {
                         <td className="p-4 border-b border-gray-100">
                           {bed.occupancyRate}%
                           <div className="h-2 bg-gray-100 rounded overflow-hidden mt-1">
-                            <div 
-                              className={`h-full rounded ${
-                                bed.occupancyRate > 70 ? 'bg-red-500' : 
+                            <div
+                              className={`h-full rounded ${bed.occupancyRate > 70 ? 'bg-red-500' :
                                 bed.occupancyRate > 50 ? 'bg-yellow-500' : 'bg-green-500'
-                              }`} 
+                                }`}
                               style={{ width: `${bed.occupancyRate}%` }}
                             ></div>
                           </div>
@@ -395,10 +446,10 @@ const HospitalLandingPage = () => {
             </div>
           )}
         </div>
-      </main>
+      </main >
 
       {/* Footer */}
-      <footer className="bg-gray-800 text-white py-6 mt-8">
+      < footer className="bg-gray-800 text-white py-6 mt-8" >
         <div className="container mx-auto px-4 flex flex-col md:flex-row justify-between items-center gap-4">
           <div>© 2025 MediCare Hospital Management System</div>
           <div className="flex gap-6">
@@ -407,8 +458,8 @@ const HospitalLandingPage = () => {
             <a href="#" className="text-white hover:text-blue-500 transition-colors">Contact Us</a>
           </div>
         </div>
-      </footer>
-    </div>
+      </footer >
+    </div >
   );
 };
 

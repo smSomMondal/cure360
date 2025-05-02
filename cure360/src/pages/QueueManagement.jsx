@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Clock, UserPlus } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 const QueueManagement = () => {
   const [queue, setQueue] = useState([
@@ -16,6 +17,8 @@ const QueueManagement = () => {
     priority: 'Normal'
   });
 
+  const navigate = useNavigate();
+
   const departments = ['Emergency', 'General Medicine', 'Pediatrics', 'Orthopedics', 'Cardiology'];
 
   const calculatePriority = (age, symptoms, department) => {
@@ -28,7 +31,7 @@ const QueueManagement = () => {
   const handleAddPatient = () => {
     const priority = calculatePriority(newPatient.age, newPatient.symptoms, newPatient.department);
     const currentTime = new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
-    
+
     setQueue([...queue, {
       id: queue.length + 1,
       ...newPatient,
@@ -36,7 +39,7 @@ const QueueManagement = () => {
       waitTime: '15 mins',
       arrivalTime: currentTime
     }]);
-    
+
     setOpen(false);
     setNewPatient({
       patientName: '',
@@ -75,8 +78,17 @@ const QueueManagement = () => {
 
   return (
     <div className="p-6">
+      {/* Top Bar */}
       <div className="flex justify-between mb-6">
-        <h1 className="text-2xl font-bold">Queue Management</h1>
+        <div className="flex items-center gap-4">
+          <button
+            onClick={() => navigate('/home')}
+            className="bg-gray-200 hover:bg-gray-300 text-gray-800 px-4 py-2 rounded"
+          >
+            ← Back to Home
+          </button>
+          <h1 className="text-2xl font-bold">Queue Management</h1>
+        </div>
         <button
           className="flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
           onClick={() => setOpen(true)}
