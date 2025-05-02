@@ -49,19 +49,25 @@ const bedTypeEnum = [
 
 
 const bedInfo = new mongoose.Schema({
-    Type: {
+    bedType: {
         type: String,
         required: true,
         enum: bedTypeEnum
     },
     bedNumber: {
-        type: String,
-        required: true
+        type: String
     },
+    addharNo:[{
+        type:String
+    }],
     maxCapacity: {
         type: Number,
         required: true
     },
+    price:{
+        type:Number,
+        require:true
+    }
 }, { _id: true, timestamps: true });
 
 const hospitalSchema = new mongoose.Schema({
@@ -96,7 +102,6 @@ const hospitalSchema = new mongoose.Schema({
         },
         country: {
             type: String,
-            required: true,
         },
         pincode: {
             type: String,
@@ -133,10 +138,6 @@ const hospitalSchema = new mongoose.Schema({
         enum: ["pending", "accept", "reject"]
     },
     bedInfo: [bedInfo],
-    createdAt: {
-        type: Date,
-        default: Date.now
-    }
 }, { timestamps: true });
 
 export default mongoose.model('Hospital', hospitalSchema);

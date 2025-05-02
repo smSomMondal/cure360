@@ -92,7 +92,7 @@ const addAppointmentRequest = expressAsyncHandler(async (req, res) => {
 
         const listAppointment = {
             patientId: patientId,
-            PatInfo,+-
+            PatInfo,
             appointmentDate: appointmentDate,
             appDocId: appDocId,
             problem,
