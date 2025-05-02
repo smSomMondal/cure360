@@ -1,5 +1,12 @@
 import LandingPage from "./LandingPage";
-import { BrowserRouter, Routes, Route, redirect, Navigate, Outlet } from "react-router-dom";
+import {
+  BrowserRouter,
+  Routes,
+  Route,
+  redirect,
+  Navigate,
+  Outlet,
+} from "react-router-dom";
 import Dashboard from "./pages/Dashboard";
 import Home from "./pages/Home";
 import Chat from "./pages/Chat";
@@ -20,24 +27,19 @@ import { useAuth } from "./context/AuthContex";
 import AddDoctor from "./doctor/AddDoctor";
 import AddHospitalForm from "./hospital/AddHospital";
 import BedManagement from "./pages/BedManagement";
-
-
+import HospitalDashboard from "./pages/Hospitaldashboard";
 import HospitalFront from "./hospital/HospitalDashboard";
 
 import QueueManagement from "./pages/QueueManagement";
 
-
 import AI from "./AI";
-
 
 const PrivetComponent = () => {
   const storedUser = localStorage.getItem("user");
-  return storedUser ? <Outlet /> : <Navigate to={'/login'} />
-}
-
+  return storedUser ? <Outlet /> : <Navigate to={"/login"} />;
+};
 
 function App() {
-
   const [user1, setUser] = useState();
   const { user } = useAuth();
   useEffect(() => {
@@ -48,7 +50,7 @@ function App() {
       console.log("User found in local storage:", parsedUser, user1);
     } else {
       console.log("No user1 found in local storage.");
-      redirect('/signup');
+      redirect("/signup");
     }
   }, [user]);
 
@@ -56,42 +58,48 @@ function App() {
     <ChatProvider>
       <BrowserRouter>
         <Routes>
-
-        <Route path="/L" element={<LandingPage />} />
+          <Route path="/L" element={<LandingPage />} />
           <Route path="/location" element={<Location />} />
-          <Route path="/patientform" element={<PatientForm />} /> 
-          <Route path="/dashboard" element={<Dashboard />} />   
-          <Route path="/hospital" element={<HospitalLandingPage/>} />   
+          <Route path="/patientform" element={<PatientForm />} />
+          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/hospital" element={<HospitalLandingPage />} />
           <Route path="/doctors" element={<BookDoctor />} />
           <Route path="/d" element={<Doctor />} />
           <Route path="/chatbot" element={<Home />} />
           <Route path="/addhospital" element={<AddHospitalForm />} />
           <Route path="/chatbot/chat" element={<Chat />} />
           <Route path="/book-appointment" element={<BookAppointment />} />
-          <Route path="/appointments-confirmation" element={<AppointmentsConfirmation />} />
+          <Route
+            path="/appointments-confirmation"
+            element={<AppointmentsConfirmation />}
+          />
           <Route path="/bookhospital" element={<HospitalSelection />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/login" element={<Login />} />
           <Route path="/AI" element={<AI />} />
-
-         <Route path="/bedmanagement" element={< BedManagement/>} />
-
-         <Route path="/queuemanagement" element={< QueueManagement/>} />
-
+          <Route path="/hospitaldashboard" element={<HospitalDashboard />} />
+          <Route path="/bedmanagement" element={<BedManagement />} />
+          <Route path="/queuemanagement" element={<QueueManagement />} />
           <Route element={<PrivetComponent />}>
             <Route path="/" element={<LandingPage />} />
             {user1 === "patient" ? (
               <Route path="/home" element={<Dashboard />} />
-            ) : (<></>)}
+            ) : (
+              <></>
+            )}
             {user1 === "doctor" ? (
               <>
-              <Route path="/home" element={<Doctor />} />
-              <Route path="/addDoctor" element={<AddDoctor/>} />
-              </>              
-            ) : (<></>)}
+                <Route path="/home" element={<Doctor />} />
+                <Route path="/addDoctor" element={<AddDoctor />} />
+              </>
+            ) : (
+              <></>
+            )}
             {user1 === "hospital" ? (
-              <Route path="/home" element={<HospitalFront/>} />
-            ) : (<></>)}
+              <Route path="/home" element={<HospitalFront />} />
+            ) : (
+              <></>
+            )}
           </Route>
         </Routes>
       </BrowserRouter>

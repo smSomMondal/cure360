@@ -23,116 +23,107 @@ export default function HospitalDashboard() {
   const [lastUpdated, setLastUpdated] = useState(new Date());
   const [loading, setLoading] = useState(false);
   
-  // Render the appropriate component based on activeNavItem
-  const renderContent = () => {
-    switch(activeNavItem) {
-      case "Bed Management":
-        return <BedManagement />;
-      default:
-        return (
-          <>
-            {/* Dashboard Content */}
-            <h1 className="text-2xl md:text-3xl font-bold text-gray-800 mb-6">Dashboard – {today}</h1>
-            
-            {/* Summary Cards */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-10">
-              <SummaryCard 
-                title="Bed Occupancy" 
-                value="72%" 
-                icon="🛏️" 
-                color="bg-blue-100" 
-                textColor="text-blue-700" 
-              />
-              <SummaryCard 
-                title="Patients Discharged" 
-                value="15" 
-                icon="📤" 
-                color="bg-green-100" 
-                textColor="text-green-700" 
-              />
-              <SummaryCard 
-                title="Inventory Alerts" 
-                value="2 critical" 
-                icon="📦" 
-                color="bg-red-100" 
-                textColor="text-red-700" 
-              />
-            </div>
-            
-            {/* Bed Occupancy Analysis */}
-            <Section title="Bed Occupancy Analysis">
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                <OccupancyItem ward="Ward A" percentage={85} critical={true} />
-                <OccupancyItem ward="Ward B" percentage={68} />
-                <OccupancyItem ward="ICU" percentage={90} critical={true} />
-                <OccupancyItem ward="General" percentage={50} />
-              </div>
-            </Section>
-            
-            {/* Recent Admissions and Inventory Alerts */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
-              <Section title="Recent Admissions">
-                <ul className="divide-y divide-gray-200">
-                  <ListItem text="John Doe" subtext="Ward B" />
-                  <ListItem text="Jane Smith" subtext="ICU" status="critical" />
-                  <ListItem text="Michael Brown" subtext="General" />
-                </ul>
-              </Section>
-              
-              <Section title="Inventory Alerts">
-                <ul className="divide-y divide-gray-200">
-                  <ListItem text="Gloves" subtext="Low stock" status="warning" />
-                  <ListItem text="Saline" subtext="Out of stock" status="critical" />
-                  <ListItem text="Masks" subtext="Running low" status="warning" />
-                </ul>
-              </Section>
-            </div>
-          </>
-        );
-    }
+  // Function to simulate refreshing data
+  const refreshData = () => {
+    setLoading(true);
+    
+    // Simulate API call delay
+    setTimeout(() => {
+      // Generate slightly different data to simulate real-time updates
+      const newData = {};
+      Object.keys(data).forEach(ward => {
+        const total = data[ward].total;
+        // Randomly change occupancy within reasonable bounds
+        const occupied = Math.max(0, Math.min(total, data[ward].occupied + Math.floor(Math.random() * 7) - 3));
+        newData[ward] = {
+          total,
+          occupied,
+          available: total - occupied
+        };
+      });
+      
+      setData(newData);
+      setLastUpdated(new Date());
+      setLoading(false);
+    }, 1000);
   };
   
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-white">
-      {/* Navbar */}
-      <nav className="bg-white shadow-lg p-4 flex flex-col md:flex-row md:justify-between md:items-center sticky top-0 z-10 border-b border-gray-200">
-        <div className="flex items-center justify-between mb-4 md:mb-0">
-          <div className="flex items-center">
-            <span className="text-3xl mr-2">🏥</span>
-            <span className="text-2xl font-extrabold text-blue-700 tracking-tight">Cure360 Admin</span>
-          </div>
-          <button className="md:hidden text-gray-500 hover:text-gray-700 focus:outline-none">
-            <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16" />
-            </svg>
-          </button>
-        </div>
-        <div className="space-x-8 font-medium hidden md:flex">
-          {["Dashboard", "Queue Management", "Bed Management", "Inventory Management", "Profile"].map(item => (
-            <NavButton 
-              key={item} 
-              label={item} 
-              active={activeNavItem === item}
-              onClick={() => setActiveNavItem(item)} 
-            />
-          ))}
-        </div>
-      </nav>
-      
-      {/* Main Content */}
-      <main className="p-6 md:p-8 max-w-7xl mx-auto">
-        {renderContent()}
-      </main>
-    </div>
-  );
-};
+  // Calculate total beds and availability
+  const totalBeds = Object.values(data).reduce((sum, ward) => sum + ward.total, 0);
+  const totalAvailable = Object.values(data).reduce((sum, ward) => sum + ward.available, 0);
+  const occupancyRate = Math.round((1 - totalAvailable / totalBeds) * 100);
+  
+  // Format data for charts
+  const barChartData = Object.keys(data).map(ward => ({
+    name: ward.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase()),
+    Available: data[ward].available,
+    Occupied: data[ward].occupied
+  }));
+  
+  const pieChartData = [
+    { name: 'Available', value: totalAvailable },
+    { name: 'Occupied', value: totalBeds - totalAvailable }
+  ];
 
-const SummaryCard = ({ title, value, icon, color, textColor }) => (
-  <div className={`rounded-xl shadow-md hover:shadow-lg transition duration-300 ${color} border border-gray-100 overflow-hidden`}>
-    <div className="p-6">
-      <div className="flex items-center mb-3">
-        <span className="text-2xl mr-2">{icon}</span>
-        <h3 className={`text-md font-medium ${textColor}`}>{title}</h3>
+  return (
+    <div className="bg-gray-50 min-h-screen">
+      {/* Header */}
+      <header className="bg-blue-600 text-white p-4 shadow-md">
+        <div className="container mx-auto flex justify-between items-center">
+          <div className="flex items-center space-x-2">
+            <Building className="h-8 w-8" />
+            <h1 className="text-2xl font-bold">City General Hospital</h1>
+          </div>
+          <div className="flex items-center text-sm">
+            <Clock className="h-4 w-4 mr-1" />
+            <span>Last updated: {lastUpdated.toLocaleTimeString()}</span>
+            <button 
+              onClick={refreshData} 
+              className="ml-2 flex items-center bg-blue-500 hover:bg-blue-400 rounded-full p-1"
+              disabled={loading}
+            >
+              <RefreshCw className={`h-4 w-4 ${loading ? 'animate-spin' : ''}`} />
+            </button>
+          </div>
+        </div>
+      </header>
+      
+      {/* Stats Overview */}
+      <div className="container mx-auto mt-6 px-4">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {/* Total Beds Card */}
+          <div className="bg-white rounded-lg shadow-md p-6 flex items-center">
+            <div className="rounded-full bg-blue-100 p-3 mr-4">
+              <Bed className="h-8 w-8 text-blue-600" />
+            </div>
+            <div>
+              <h3 className="text-gray-500 text-sm">Total Beds</h3>
+              <p className="text-2xl font-bold">{totalBeds}</p>
+            </div>
+          </div>
+          
+          {/* Available Beds Card */}
+          <div className="bg-white rounded-lg shadow-md p-6 flex items-center">
+            <div className="rounded-full bg-green-100 p-3 mr-4">
+              <Bed className="h-8 w-8 text-green-600" />
+            </div>
+            <div>
+              <h3 className="text-gray-500 text-sm">Available Beds</h3>
+              <p className="text-2xl font-bold">{totalAvailable}</p>
+            </div>
+          </div>
+          
+          {/* Occupancy Rate Card */}
+          <div className="bg-white rounded-lg shadow-md p-6 flex items-center">
+            <div className="rounded-full bg-yellow-100 p-3 mr-4">
+              <Users className="h-8 w-8 text-yellow-600" />
+            </div>
+            <div>
+              <h3 className="text-gray-500 text-sm">Occupancy Rate</h3>
+              <p className="text-2xl font-bold">{occupancyRate}%</p>
+            </div>
+          </div>
+        </div>
       </div>
       
       {/* Charts Section */}
@@ -237,5 +228,5 @@ const SummaryCard = ({ title, value, icon, color, textColor }) => (
         </button>
       </div>
     </div>
-  </div>
-  );  
+  );
+}
