@@ -18,12 +18,12 @@ const addDoctor = async (req, res) => {
             } = req.body;
 
 
-            if(req.user.role!=='doctor' || !!req.user.typeId){
-                return res.state(400).json({
+            /*if(req.user.role!=='doctor' || !!req.user.typeId){
+                return res.status(500).json({
                     success:false,
                     massage:"not a doctor or doctor exist"
                 })
-            }
+            }*/
             const newDoctor = new Doctor({
                 name,
                 age,
@@ -64,17 +64,29 @@ const getDoctor = async (req, res) => {
     try {
 
         const { city, state, department } = req.body;
-        const query = {};
+        /*const query = {};
         if (city) query['address.city'] = city;
         if (state) query['address.state'] = state;
         if (department){
             query.specialization = department;
         } else{
             query.specialization = 'General Medicine';
-        }
+        }*/
+        const orConditions = [];
 
+    if (city) orConditions.push({ 'address.city': city });
+    if (state) orConditions.push({ 'address.state': state });
+    if (department) orConditions.push({ specialization: department });
+
+    // Fallback to default if no fields are passed
+    const query = orConditions.length > 0 ? { $or: orConditions } : { specialization: 'General Medicine' };
+
+    console.log('Query:', query);
+        //console.log(query);
+        
         const doctors = await Doctor.find(query).select('-listAppointment');
-
+        //console.log(doctors);
+        
         // res.status(200).json(doctors);
         res.status(200).json({
             success: true,

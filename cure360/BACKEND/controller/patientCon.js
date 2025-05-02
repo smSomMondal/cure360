@@ -1,6 +1,6 @@
 import Patient from '../model/patientModel.js';
-import User from '../model/userModel.js' 
-import Doctor from '../model/doctorModel.js' 
+import User from '../model/userModel.js'
+import Doctor from '../model/doctorModel.js'
 import Hospital from '../model/hospitalModel.js'
 import expressAsyncHandler from 'express-async-handler';
 
@@ -59,23 +59,24 @@ const addPatient = expressAsyncHandler(async (req, res) => {
 
 const addAppointmentRequest = expressAsyncHandler(async (req, res) => {
     try {
-        const { patientId, appDocId, ApplDate, vesiteDate, PatInfo,problem } = req.body;
-        if ( !req.user._id) {
+        const { appDocId, appointmentDate, PatInfo, problem, peAppId,vesiteDate,ApplDate } = req.body;
+
+        if (!req.user || !req.user._id) {
             return res.status(401).json({ success: false, message: "Unauthorized" });
         }
-        if (!patientId || !appDocId || !ApplDate || !vesiteDate || !PatInfo || !problem) {
+        let patientId = req.user._id;
+        if (!patientId || !appDocId || !appointmentDate || !PatInfo || !problem || !peAppId) {
             return res.status(400).json({
                 success: false,
-                message: "patientId, appDocId, ApplDate, vesiteDate and PatInfo are required",
+                message: "patientId, appDocId, appointmentDate, PatInfo, problem, and peAppId are required",
             });
         }
 
         const appointmentRequest = {
-            petientId: patientId,
+            patientId,
             appDocId,
             ApplDate,
             vesiteDate,
-            appDocId: appDocId,
             state: "active",
         };
 
@@ -91,8 +92,8 @@ const addAppointmentRequest = expressAsyncHandler(async (req, res) => {
 
         const listAppointment = {
             patientId: patientId,
-            PatInfo,
-            appointmentDate: ApplDate,
+            PatInfo,+-
+            appointmentDate: appointmentDate,
             appDocId: appDocId,
             problem,
             peAppId: updatedPatient.appointmentRequest._id,
@@ -124,7 +125,7 @@ const addAppointmentRequest = expressAsyncHandler(async (req, res) => {
 
 const hospitaAvilibility = expressAsyncHandler(async (req, res) => {
     try {
-        const { city,state } = req.body;
+        const { city, state } = req.body;
         if (!city || !state) {
             return res.status(400).json({
                 success: false,
@@ -168,4 +169,4 @@ const hospitaAvilibility = expressAsyncHandler(async (req, res) => {
     }
 });
 
-export { addPatient ,addAppointmentRequest , hospitaAvilibility};
+export { addPatient, addAppointmentRequest, hospitaAvilibility };

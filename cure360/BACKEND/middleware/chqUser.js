@@ -15,14 +15,14 @@ const chqProtectedUser = expressAsyncHandler(async (req, res, next) => {
             try {
                 //req.headers.authorization="Bearer" "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2OTE2ZDYzM2YzZDI1MjcyNzAxODk0YyIsImlhdCI6MTcyMDgwNjg3NCwiZXhwIjoxNzIzMzk4ODc0fQ.EnYqKS5FK3F6Pb81P5kyGHWdCeKJSxP_9TiimzORt7Q"
                 token = req.headers.authorization.split(" ")[1];
-                console.log(token);
-                
+                // console.log(token);
+
                 const decoded = jwt.verify(token, process.env.JWT_SECRET);
                 req.user = await User.findById(decoded.id).select("-password");
                 next();
             }
             catch (err) {
-                res.status(401).json({ message: "Not authorized, token failed"+err.message });
+                res.status(401).json({ message: "Not authorized, token failed" + err.message });
             }
         }
         if (!token) {
@@ -46,11 +46,22 @@ const chqProtectedPatient = expressAsyncHandler(async (req, res, next) => {
                 token = req.headers.authorization.split(" ")[1];
                 console.log(token);
                 const decoded = jwt.verify(token, process.env.JWT_SECRET);
-                req.user = await Patient.findById(decoded.id).select("-password");
+                let data = await User.findById(decoded.id).select("-password");
+                //console.log(data.typeId._id);
+
+                if (data.role !== 'patient') {
+                    return res.status(400).json({
+                        massage: "not a patient"
+                    })
+                }
+                data = await Patient.findById(data.typeId);
+                //console.log(data);
+
+                req.user = data
                 next();
             }
             catch (err) {
-                res.status(401).json({ message: "Not authorized, token failed"+err.message });
+                res.status(401).json({ message: "Not authorized, token failed" + err.message });
             }
         }
         if (!token) {
@@ -77,7 +88,7 @@ const chqProtectedDoctor = expressAsyncHandler(async (req, res, next) => {
                 next();
             }
             catch (err) {
-                res.status(401).json({ message: "Not authorized, token failed"+err.message });
+                res.status(401).json({ message: "Not authorized, token failed" + err.message });
             }
         }
         if (!token) {
@@ -104,7 +115,7 @@ const chqProtectedHospital = expressAsyncHandler(async (req, res, next) => {
                 next();
             }
             catch (err) {
-                res.status(401).json({ message: "Not authorized, token failed"+err.message });
+                res.status(401).json({ message: "Not authorized, token failed" + err.message });
             }
         }
         if (!token) {
@@ -117,4 +128,4 @@ const chqProtectedHospital = expressAsyncHandler(async (req, res, next) => {
     }
 
 });
-export { chqProtectedUser , chqProtectedPatient, chqProtectedDoctor, chqProtectedHospital };
+export { chqProtectedUser, chqProtectedPatient, chqProtectedDoctor, chqProtectedHospital };

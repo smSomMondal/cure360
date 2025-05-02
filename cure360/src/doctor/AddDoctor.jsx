@@ -103,7 +103,11 @@ export default function AddDoctor() {
 
       // Navigate to dashboard after successful validation
       if (Res.status === 200) {
-        window.location.href = '/home';
+        //console.log(Res.data.data.saveDocroe);
+        
+        localStorage.setItem("doctor", JSON.stringify(Res.data.data.saveDocroe));
+
+        // window.location.href = '/home';
       }
 
     } catch (error) {

@@ -72,7 +72,7 @@ function App() {
           <Route path="/hospitaldashboard" element={<HospitalDashboard />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/login" element={<Login />} />
-          <Route path="/AI" element={<AI />} />
+          {/* <Route path="/AI" element={<AI />} /> */}
 
          <Route path="/bedmanagement" element={< BedManagement/>} />
 
