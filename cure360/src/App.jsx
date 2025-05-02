@@ -19,7 +19,7 @@ import Doctor from "./doctor/Doctor";
 import { useEffect, useState } from "react";
 import { useAuth } from "./context/AuthContex";
 import AddDoctor from "./doctor/AddDoctor";
-
+import AddHospitalForm from "./hospital/AddHospital";
 import BedManagement from "./pages/BedManagement";
 
 
@@ -65,6 +65,7 @@ function App() {
           <Route path="/doctors" element={<BookDoctor />} />
           <Route path="/d" element={<Doctor />} />
           <Route path="/chatbot" element={<Home />} />
+          <Route path="/addhospital" element={<AddHospitalForm />} />
           <Route path="/chatbot/chat" element={<Chat />} />
           <Route path="/book-appointment" element={<BookAppointment />} />
           <Route path="/appointments-confirmation" element={<AppointmentsConfirmation />} />
