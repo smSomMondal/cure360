@@ -1,28 +1,5 @@
 import React, { useState } from 'react';
-import { 
-  Box, 
-  Paper, 
-  Typography, 
-  Table, 
-  TableBody, 
-  TableCell, 
-  TableContainer, 
-  TableHead, 
-  TableRow,
-  Button,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  TextField,
-  FormControl,
-  InputLabel,
-  Select,
-  MenuItem,
-  Grid,
-  Chip
-} from '@mui/material';
-import { AccessTime, Priority, PersonAdd } from '@mui/icons-material';
+import { Clock, UserPlus } from 'lucide-react';
 
 const QueueManagement = () => {
   const [queue, setQueue] = useState([
@@ -74,137 +51,165 @@ const QueueManagement = () => {
     setQueue(queue.filter(patient => patient.id !== id));
   };
 
+  const getPriorityColor = (priority) => {
+    switch(priority) {
+      case 'High':
+        return 'bg-red-100 text-red-800';
+      case 'Medium':
+        return 'bg-orange-100 text-orange-800';
+      default:
+        return 'bg-gray-100 text-gray-800';
+    }
+  };
+
+  const getRowColor = (priority) => {
+    switch(priority) {
+      case 'High':
+        return 'bg-red-50';
+      case 'Medium':
+        return 'bg-orange-50';
+      default:
+        return '';
+    }
+  };
+
   return (
-    <Box sx={{ p: 3 }}>
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 3 }}>
-        <Typography variant="h4" gutterBottom>
-          Queue Management
-        </Typography>
-        <Button
-          variant="contained"
-          startIcon={<PersonAdd />}
+    <div className="p-6">
+      <div className="flex justify-between mb-6">
+        <h1 className="text-2xl font-bold">Queue Management</h1>
+        <button
+          className="flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
           onClick={() => setOpen(true)}
         >
+          <UserPlus size={16} />
           Add Patient
-        </Button>
-      </Box>
+        </button>
+      </div>
 
-      <Dialog open={open} onClose={() => setOpen(false)} maxWidth="sm" fullWidth>
-        <DialogTitle>Register New Patient</DialogTitle>
-        <DialogContent>
-          <Grid container spacing={2} sx={{ mt: 1 }}>
-            <Grid item xs={12}>
-              <TextField
-                fullWidth
-                label="Patient Name"
-                value={newPatient.patientName}
-                onChange={(e) => setNewPatient({...newPatient, patientName: e.target.value})}
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                fullWidth
-                label="Age"
-                type="number"
-                value={newPatient.age}
-                onChange={(e) => setNewPatient({...newPatient, age: e.target.value})}
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <FormControl fullWidth>
-                <InputLabel>Department</InputLabel>
-                <Select
-                  value={newPatient.department}
-                  label="Department"
-                  onChange={(e) => setNewPatient({...newPatient, department: e.target.value})}
-                >
-                  {departments.map(dept => (
-                    <MenuItem key={dept} value={dept}>{dept}</MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            </Grid>
-            <Grid item xs={12}>
-              <TextField
-                fullWidth
-                label="Symptoms"
-                multiline
-                rows={2}
-                value={newPatient.symptoms}
-                onChange={(e) => setNewPatient({...newPatient, symptoms: e.target.value})}
-              />
-            </Grid>
-          </Grid>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setOpen(false)}>Cancel</Button>
-          <Button onClick={handleAddPatient} variant="contained" color="primary">
-            Register
-          </Button>
-        </DialogActions>
-      </Dialog>
-      <TableContainer component={Paper}>
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell>Token Number</TableCell>
-              <TableCell>Patient Name</TableCell>
-              <TableCell>Age</TableCell>
-              <TableCell>Department</TableCell>
-              <TableCell>Symptoms</TableCell>
-              <TableCell>Arrival Time</TableCell>
-              <TableCell>Est. Wait Time</TableCell>
-              <TableCell>Priority</TableCell>
-              <TableCell>Actions</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {queue.map((patient) => (
-              <TableRow 
-                key={patient.id}
-                sx={{
-                  backgroundColor: 
-                    patient.priority === 'High' ? '#ffebee' :
-                    patient.priority === 'Medium' ? '#fff3e0' : 'inherit'
-                }}
-              >
-                <TableCell>{patient.id}</TableCell>
-                <TableCell>{patient.patientName}</TableCell>
-                <TableCell>{patient.age}</TableCell>
-                <TableCell>{patient.department}</TableCell>
-                <TableCell>{patient.symptoms}</TableCell>
-                <TableCell>{patient.arrivalTime}</TableCell>
-                <TableCell>
-                  <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                    <AccessTime sx={{ fontSize: 16, mr: 0.5 }} />
-                    {patient.waitTime}
-                  </Box>
-                </TableCell>
-                <TableCell>
-                  <Chip 
-                    label={patient.priority}
-                    color={
-                      patient.priority === 'High' ? 'error' :
-                      patient.priority === 'Medium' ? 'warning' : 'default'
-                    }
-                    size="small"
+      {/* Modal Dialog */}
+      {open && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+          <div className="bg-white rounded-lg p-6 w-full max-w-md">
+            <h2 className="text-xl font-semibold mb-4">Register New Patient</h2>
+            <div className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Patient Name
+                </label>
+                <input
+                  className="w-full border border-gray-300 rounded px-3 py-2"
+                  value={newPatient.patientName}
+                  onChange={(e) => setNewPatient({...newPatient, patientName: e.target.value})}
+                />
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Age
+                  </label>
+                  <input
+                    type="number"
+                    className="w-full border border-gray-300 rounded px-3 py-2"
+                    value={newPatient.age}
+                    onChange={(e) => setNewPatient({...newPatient, age: e.target.value})}
                   />
-                </TableCell>
-                <TableCell>
-                  <Button 
-                    variant="contained" 
-                    size="small"
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Department
+                  </label>
+                  <select
+                    className="w-full border border-gray-300 rounded px-3 py-2"
+                    value={newPatient.department}
+                    onChange={(e) => setNewPatient({...newPatient, department: e.target.value})}
+                  >
+                    <option value="">Select</option>
+                    {departments.map(dept => (
+                      <option key={dept} value={dept}>{dept}</option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Symptoms
+                </label>
+                <textarea
+                  className="w-full border border-gray-300 rounded px-3 py-2"
+                  rows="2"
+                  value={newPatient.symptoms}
+                  onChange={(e) => setNewPatient({...newPatient, symptoms: e.target.value})}
+                ></textarea>
+              </div>
+            </div>
+            <div className="flex justify-end mt-6 space-x-2">
+              <button 
+                className="px-4 py-2 border border-gray-300 rounded text-gray-700 hover:bg-gray-50" 
+                onClick={() => setOpen(false)}
+              >
+                Cancel
+              </button>
+              <button 
+                className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+                onClick={handleAddPatient}
+              >
+                Register
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Table */}
+      <div className="overflow-x-auto border border-gray-200 rounded-lg shadow">
+        <table className="min-w-full divide-y divide-gray-200">
+          <thead className="bg-gray-50">
+            <tr>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Token</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Patient Name</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Age</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Department</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Symptoms</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Arrival Time</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Wait Time</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Priority</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+            </tr>
+          </thead>
+          <tbody className="bg-white divide-y divide-gray-200">
+            {queue.map((patient) => (
+              <tr key={patient.id} className={getRowColor(patient.priority)}>
+                <td className="px-6 py-4 whitespace-nowrap">{patient.id}</td>
+                <td className="px-6 py-4 whitespace-nowrap">{patient.patientName}</td>
+                <td className="px-6 py-4 whitespace-nowrap">{patient.age}</td>
+                <td className="px-6 py-4 whitespace-nowrap">{patient.department}</td>
+                <td className="px-6 py-4 whitespace-nowrap">{patient.symptoms}</td>
+                <td className="px-6 py-4 whitespace-nowrap">{patient.arrivalTime}</td>
+                <td className="px-6 py-4 whitespace-nowrap">
+                  <div className="flex items-center">
+                    <Clock className="h-4 w-4 mr-1 text-gray-500" />
+                    <span>{patient.waitTime}</span>
+                  </div>
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap">
+                  <span className={`px-2 py-1 text-xs rounded-full ${getPriorityColor(patient.priority)}`}>
+                    {patient.priority}
+                  </span>
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap">
+                  <button 
+                    className="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-sm"
                     onClick={() => handleCallNext(patient.id)}
                   >
                     Call Next
-                  </Button>
-                </TableCell>
-              </TableRow>
+                  </button>
+                </td>
+              </tr>
             ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
-    </Box>
+          </tbody>
+        </table>
+      </div>
+    </div>
   );
 };
 
