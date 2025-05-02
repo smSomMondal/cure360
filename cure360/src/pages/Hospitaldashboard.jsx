@@ -1,9 +1,27 @@
-import React, { useState } from 'react';
-import BedManagement from './BedManagement'; // Import the BedManagement component
+import { useState } from 'react';
+import { 
+  BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer,
+  PieChart, Pie, Cell
+} from 'recharts';
+import { 
+  Home, Clock, Users, Building, PlusCircle, RefreshCw, Bed
+} from 'lucide-react';
 
-const HospitalDashboard = () => {
-  const today = new Date().toLocaleDateString();
-  const [activeNavItem, setActiveNavItem] = useState("Dashboard");
+// Mock data for hospital bed availability
+const initialData = {
+  generalWard: { total: 50, occupied: 32, available: 18 },
+  icu: { total: 20, occupied: 15, available: 5 },
+  emergency: { total: 15, occupied: 10, available: 5 },
+  pediatric: { total: 25, occupied: 18, available: 7 },
+  maternity: { total: 30, occupied: 24, available: 6 }
+};
+
+const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884d8'];
+
+export default function HospitalDashboard() {
+  const [data, setData] = useState(initialData);
+  const [lastUpdated, setLastUpdated] = useState(new Date());
+  const [loading, setLoading] = useState(false);
   
   // Render the appropriate component based on activeNavItem
   const renderContent = () => {

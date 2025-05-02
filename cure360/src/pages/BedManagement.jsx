@@ -55,50 +55,54 @@ const BedManagement = () => {
     }
   });
 
-  const [open, setOpen] = useState(false);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [selectedBed, setSelectedBed] = useState(null);
   const [activeTab, setActiveTab] = useState('icu');
   const [newPatient, setNewPatient] = useState({
-    name: '',
-    admissionDate: new Date().toISOString().split('T')[0],
-    expectedDischarge: '',
-    department: ''
+    name: "",
+    admissionDate: new Date().toISOString().split("T")[0],
+    expectedDischarge: "",
+    department: "",
   });
 
   const handleAssignBed = () => {
     const department = newPatient.department.toLowerCase();
     const updatedBeds = { ...beds };
-    const bedToUpdate = updatedBeds[department].beds.find(bed => bed.id === selectedBed);
-    
+    const bedToUpdate = updatedBeds[department].beds.find(
+      (bed) => bed.id === selectedBed
+    );
+
     if (bedToUpdate) {
-      bedToUpdate.status = 'occupied';
+      bedToUpdate.status = "occupied";
       bedToUpdate.patient = {
         name: newPatient.name,
         admissionDate: newPatient.admissionDate,
-        expectedDischarge: newPatient.expectedDischarge
+        expectedDischarge: newPatient.expectedDischarge,
       };
       updatedBeds[department].occupied += 1;
       updatedBeds.occupied += 1;
       updatedBeds.available -= 1;
       setBeds(updatedBeds);
     }
-    
-    setOpen(false);
+
+    setIsDialogOpen(false);
     setNewPatient({
-      name: '',
-      admissionDate: new Date().toISOString().split('T')[0],
-      expectedDischarge: '',
-      department: ''
+      name: "",
+      admissionDate: new Date().toISOString().split("T")[0],
+      expectedDischarge: "",
+      department: "",
     });
     setSelectedBed(null);
   };
 
   const handleDischargeBed = (department, bedId) => {
     const updatedBeds = { ...beds };
-    const bedToUpdate = updatedBeds[department].beds.find(bed => bed.id === bedId);
-    
+    const bedToUpdate = updatedBeds[department].beds.find(
+      (bed) => bed.id === bedId
+    );
+
     if (bedToUpdate) {
-      bedToUpdate.status = 'available';
+      bedToUpdate.status = "available";
       bedToUpdate.patient = null;
       updatedBeds[department].occupied -= 1;
       updatedBeds.occupied -= 1;

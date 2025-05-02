@@ -19,8 +19,16 @@ import { useEffect, useState } from "react";
 import { useAuth } from "./context/AuthContex";
 import AddDoctor from "./doctor/AddDoctor";
 
+import BedManagement from "./pages/BedManagement";
+
+
+import HospitalFront from "./hospital/HospitalDashboard";
+
+import QueueManagement from "./pages/QueueManagement";
+
 
 import AI from "./AI";
+
 
 const PrivetComponent = () => {
   const storedUser = localStorage.getItem("user");
@@ -65,6 +73,10 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/AI" element={<AI />} />
 
+         <Route path="/bedmanagement" element={< BedManagement/>} />
+
+         <Route path="/queuemanagement" element={< QueueManagement/>} />
+
           <Route element={<PrivetComponent />}>
             <Route path="/" element={<LandingPage />} />
             {user1 === "patient" ? (
@@ -77,7 +89,7 @@ function App() {
               </>              
             ) : (<></>)}
             {user1 === "hospital" ? (
-              <Route path="/home" element={<Dashboard />} />
+              <Route path="/home" element={<HospitalFront/>} />
             ) : (<></>)}
           </Route>
         </Routes>
