@@ -9,9 +9,11 @@ import {
   WalletIcon, 
   MapPinIcon, 
   CalendarIcon,
+  HeartPulse,
   Clock,
   Activity,
-  Bell
+  Bell,
+  TriangleAlertIcon
 } from "lucide-react";
 import ActionCard from "../component/Actioncard";
 import AppointmentCard from "../component/AppointmentCard";
@@ -69,6 +71,22 @@ export default function Dashboard() {
       onClick: () => navigate("/hospital"),
     },
     {
+      title: "Health Check",
+      icon: <HeartPulse className="w-5 h-5" />,
+      onClick: () => navigate("/health-score"),
+    },
+    {
+      title: "access Risk",
+      icon: <TriangleAlertIcon className="w-5 h-5" />,
+      onClick: () => navigate("/riskassessment"),
+    },
+    {
+      title: "AI POWERRED SELF DIAGNOSIS",
+      icon: <Activity className="w-5 h-5" />,
+      
+      onClick: () => navigate("/AI"),
+    },
+    {
       title: "Book Lab Test",
       icon: <FlaskConicalIcon className="w-5 h-5" />,
       onClick: () => navigate("/labs"),
@@ -88,12 +106,7 @@ export default function Dashboard() {
       icon: <ShoppingCartIcon className="w-5 h-5" />,
       onClick: () => navigate("/shop"),
     },
-    {
-      title: "AI POWERRED SELF DIAGNOSIS",
-      icon: <Activity className="w-5 h-5" />,
-      
-      onClick: () => navigate("/AI"),
-    },
+    
     
   ];
 
@@ -109,10 +122,11 @@ export default function Dashboard() {
       icon: <FileTextIcon className="w-5 h-5" />
     },
     {
-      label: "AI POWERED DIAGNOSIS",
+      label: "Health Score",
       value: "85%",
-      icon: <Activity className="w-5 h-5" />
+      icon: <HeartPulse className="w-5 h-5" />
     }
+
   ];
 
   return (

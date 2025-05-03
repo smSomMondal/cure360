@@ -29,9 +29,9 @@ import AddHospitalForm from "./hospital/AddHospital";
 import BedManagement from "./pages/BedManagement";
 import HospitalDashboard from "./pages/Hospitaldashboard";
 import HospitalFront from "./hospital/HospitalDashboard";
-import HealthCheckPage from "./pages/HealthCheck";
-import QueueManagement from "./pages/QueueManagement";
 import RiskAssessmentPage from "./pages/RiskAssessmentPage";
+import QueueManagement from "./pages/QueueManagement";
+import HealthCheckPage from "./pages/HealthCheck";
 import AI from "./AI";
 import UpdatedBedInfo from "./hospital/UpdateBedInfo";
 
@@ -62,27 +62,15 @@ function App() {
           <Route path="/L" element={<LandingPage />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/d" element={<Doctor />} />
-          <Route path="/chatbot" element={<Home />} />
-          <Route path="/addhospital" element={<AddHospitalForm />} />
-          <Route path="/chatbot/chat" element={<Chat />} />
-          <Route path="/book-appointment" element={<BookAppointment />} />
-          <Route
-            path="/appointments-confirmation"
-            element={<AppointmentsConfirmation />}
-          />
-          <Route path="/bookhospital" element={<HospitalSelection />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/login" element={<Login />} />
-          <Route path="/AI" element={<AI />} />
-          <Route path="/hospitaldashboard" element={<HospitalDashboard />} />
-          <Route path="/bedmanagement" element={<BedManagement />} />
-          <Route path="/queuemanagement" element={<QueueManagement />} />
           <Route element={<PrivetComponent />}>
             <Route path="/" element={<LandingPage />} />
             {user1 === "patient" ? (
               <>
                 <Route path="/home" element={<Dashboard />} />
-
+                <Route path="/riskassessment" element={<RiskAssessmentPage />} />
+                <Route path="/health-score" element={<HealthCheckPage />} />
                 <Route path="/location" element={<Location />} />
                 <Route path="/patientform" element={<PatientForm />} />
                 <Route path="/hospital" element={<HospitalLandingPage />} />
