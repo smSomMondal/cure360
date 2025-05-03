@@ -20,10 +20,10 @@ function Sidebar({ activeSection, setActiveSection }) {
       </div>
       <div className="user-profile">
         <div className="user-avatar">
-          <img src="/api/placeholder/40/40" alt="Dr. Smith" />
+          <img src="/api/placeholder/40/40" alt="Dr. jaiswal" />
         </div>
         <div className="user-info">
-          <h4>Dr. Smith</h4>
+          <h4>Dr. jaiswal</h4>
           <p>Cardiologist</p>
         </div>
       </div>

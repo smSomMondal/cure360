@@ -85,10 +85,10 @@ function Sidebar({ activeSection, setActiveSection }) {
       </div>
       <div className="user-profile">
         <div className="user-avatar">
-          <img src="/api/placeholder/40/40" alt="Dr. Smith" />
+          <img src="/api/placeholder/40/40" alt="Dr. jaiswal" />
         </div>
         <div className="user-info">
-          <h4>Dr. Smith</h4>
+          <h4>Dr. jaiswal</h4>
           <p>Cardiologist</p>
         </div>
       </div>
@@ -246,31 +246,14 @@ function CheckRequestsSection({ pendingRequests, setPendingRequests, activePatie
   const [requests, setRequests] = useState([
     { 
       id: 1,
-      name: 'Robert Thompson', 
-      age: '42', 
+      name: 'Ankur Goswami', 
+      age: '21', 
       problem: 'Persistent cough and fever for 3 days', 
-      contact: '+1 (555) 123-4567', 
-      preferredDate: 'April 20, 2025', 
+      contact: '+91 7810809075', 
+      preferredDate: 'May 3, 2025', 
       notes: 'History of asthma, currently using inhaler.' 
     },
-    { 
-      id: 2,
-      name: 'Jennifer Adams', 
-      age: '35', 
-      problem: 'Severe migraine headaches', 
-      contact: '+1 (555) 987-6543', 
-      preferredDate: 'April 21, 2025', 
-      notes: 'Episodes increasing in frequency, family history of migraines.' 
-    },
-    { 
-      id: 3,
-      name: 'Carlos Rodriguez', 
-      age: '27', 
-      problem: 'Lower back pain after lifting weights', 
-      contact: '+1 (555) 345-6789', 
-      preferredDate: 'April 22, 2025', 
-      notes: 'No previous history of back problems, pain increasing with movement.' 
-    }
+    
   ]);
 
   const [patientDetailModal, setPatientDetailModal] = useState(null);
