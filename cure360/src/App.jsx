@@ -34,7 +34,7 @@ import QueueManagement from "./pages/QueueManagement";
 import HealthCheckPage from "./pages/HealthCheck";
 import AI from "./AI";
 import UpdatedBedInfo from "./hospital/UpdateBedInfo";
-
+import InventoryManagement from "./pages/InventoryManagement";
 const PrivetComponent = () => {
   const storedUser = localStorage.getItem("user");
   return storedUser ? <Outlet /> : <Navigate to={"/login"} />;
@@ -100,6 +100,7 @@ function App() {
                 <Route path="/bedmanagement" element={<BedManagement />} />
                 <Route path="/queuemanagement" element={<QueueManagement />} />
                 <Route path="/addhospital" element={<AddHospitalForm />} />
+                <Route path="/inventorymanagement" element={<InventoryManagement/>} />
                 <Route path="/updateBed" element={<UpdatedBedInfo/>}/>
               </>
             ) : (
