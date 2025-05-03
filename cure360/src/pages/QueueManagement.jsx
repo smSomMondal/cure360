@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Clock, UserPlus } from 'lucide-react';
+import { Clock, UserPlus ,Home} from 'lucide-react';
 
 const QueueManagement = () => {
   const [queue, setQueue] = useState([
@@ -72,10 +72,21 @@ const QueueManagement = () => {
         return '';
     }
   };
-
+  const handleNavigateHome = () => {
+    window.location.href = '/home';
+    // In a real app, you would use router navigation here
+    // For example: router.push('/') or history.push('/') or window.location.href = '/'
+  };
   return (
     <div className="p-6">
       <div className="flex justify-between mb-6">
+        <button 
+                    className="mr-4 bg-gray-100 hover:bg-gray-200 text-gray-800 font-bold py-2 px-4 rounded inline-flex items-center"
+                    onClick={handleNavigateHome}
+                  >
+                    <Home className="w-4 h-4 mr-2" />
+                    Home
+                  </button>
         <h1 className="text-2xl font-bold">Queue Management</h1>
         <button
           className="flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
