@@ -1,7 +1,8 @@
-import Hospital from "../models/hospitalModel.js";
+import Hospital from "../model/hospitalModel.js";
+import User from '../model/userModel.js'
 import expressAsyncHandler from "express-async-handler";
 
-const addHospital = expressAsyncHandler(async (req, res) => {   
+const addHospital = expressAsyncHandler(async (req, res) => {
     try {
         const {
             name,
@@ -9,9 +10,22 @@ const addHospital = expressAsyncHandler(async (req, res) => {
             contactNumber,
             email,
             address,
+            departments = [],
+            facilities = [],
+            isActive = true,
+            hospitalLicence = "",
+            hospitalLicenceUrl = "",
+            bedInfo = []
         } = req.body;
 
         // Basic validation
+
+        if (req.user.role !== 'hospital') {
+            return res.status(400).json({
+                success: false,
+                massage: "not a hospital"
+            })
+        }
         if (!name || !registrationNumber || !contactNumber || !email) {
             return res.status(400).json({
                 success: false,
@@ -19,7 +33,9 @@ const addHospital = expressAsyncHandler(async (req, res) => {
             });
         }
 
-        if (!address || !address.street || !address.city || !address.state || !address.country || !address.pincode || !address.landmark) {
+        if (!address || !address.street || !address.city || !address.state || !address.pincode || !address.landmark) {
+            console.log(address);
+
             return res.status(400).json({
                 success: false,
                 message: "Incomplete address information"
@@ -32,14 +48,27 @@ const addHospital = expressAsyncHandler(async (req, res) => {
             contactNumber,
             email,
             address,
-            isActive:false,
+            departments,
+            facilities,
+            isActive,
+            hospitalLicence,
+            hospitalLicenceUrl,
+            bedInfo
         });
+        await newHospital.save();
+        //console.log(newHospital);
 
-        const savedHospital = await newHospital.save();
-        res.status(201).json({
+        const user = await User.findOne({ _id: req.user._id });
+
+        user.typeId = newHospital._id;
+        await user.save();
+        const newUser = await User.findOne({ _id: req.user._id }).select("-password");
+
+
+        res.status(200).json({
             success: true,
-            message: "Hospital created successfully",
-            data: savedHospital
+            message: "doctor created successfully",
+            data: { newHospital, newUser }
         });
 
     } catch (error) {
@@ -238,4 +267,50 @@ const getBedsByLocation = expressAsyncHandler(async (req, res) => {
     }
 });
 
-export {addHospital, addMultipleBedsToHospital, updateMultipleBedNumbers, updateHospitalStatus, getBedsByLocation};
+const updateBedInfo = expressAsyncHandler(async (req, res) => {
+  try {
+    const { bedType, maxCapacity, addAadhar, removeAadhar } = req.body;
+
+    const hospital = await Hospital.findById(req.params.hospitalId);
+    if (!hospital) return res.status(404).json({ success: false, message: "Hospital not found" });
+
+    const bed = hospital.bedInfo.find(b => b.bedType === bedType);
+    if (!bed) return res.status(404).json({ success: false, message: "Bed type not found" });
+
+    if (maxCapacity !== undefined) bed.maxCapacity = maxCapacity;
+
+    if (Array.isArray(addAadhar)) {
+      bed.addharNo.push(...addAadhar.filter(a => !bed.addharNo.includes(a)));
+    }
+
+    if (Array.isArray(removeAadhar)) {
+      bed.addharNo = bed.addharNo.filter(a => !removeAadhar.includes(a));
+    }
+
+    await hospital.save();
+    res.json({ success: true, bedInfo: hospital.bedInfo });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+})
+
+const hosInfo = expressAsyncHandler(async(req,res)=>{
+
+    try {
+        //const {id} =req.user.typeId
+        // const id = req.user.typeId
+    const hos = await Hospital.findById(req.user.typeId)
+    // console.log(hos);
+    
+    return res.status(200).json({data:hos})
+    } catch (error) {
+        console.log(error);
+        return res.status(400).json({
+            massage:error
+        })
+    }
+    
+
+})
+
+export { addHospital, addMultipleBedsToHospital, updateMultipleBedNumbers, updateHospitalStatus, getBedsByLocation ,updateBedInfo,hosInfo};

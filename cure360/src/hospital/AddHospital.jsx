@@ -1,31 +1,50 @@
+import axios from "axios";
 import { useState } from "react";
 
 export default function AddHospitalForm() {
   // Department and facility enums (replace with your actual enums)
   const departmentEnum = [
-    "Cardiology",
-    "Neurology",
-    "Orthopedics",
-    "Pediatrics",
-    "Gynecology",
-    "Internal Medicine",
-    "Emergency",
-    "Radiology",
-    "Oncology",
-    "Psychiatry"
+    'Pathology',
+    'Radiology',
+    'Cardiology',
+    'Orthopedics',
+    'Neurology',
+    'Oncology',
+    'Pediatrics',
+    'Dermatology',
+    'Gynecology',
+    'Psychiatry',
+    'ENT',
+    'General Medicine',
+    'Surgery'
   ];
 
   const facilityEnum = [
-    "ICU",
-    "MRI",
-    "CT Scan",
-    "X-Ray",
-    "Ambulance",
-    "Blood Bank",
-    "Pharmacy",
-    "Laboratory",
-    "Cafeteria",
-    "Parking"
+    'ICU',
+    'Emergency',
+    'Pharmacy',
+    'Lab',
+    'Ambulance',
+    'Cafeteria',
+    'Operation Theatre',
+    'Blood Bank',
+    'Radiology Unit',
+    'Waiting Area',
+    'Parking',
+    'Covid Isolation Ward'
+  ];
+
+  const bedTypeEnum = [
+    'General Ward',
+    'Private',
+    'ICU',
+    'PICU',
+    'NICU',
+    'HDU',
+    'Emergency',
+    'Isolation',
+    'Maternity',
+    'Day Care'
   ];
 
   // Form state
@@ -47,7 +66,11 @@ export default function AddHospitalForm() {
     isActive: true,
     hospitalLicence: "",
     hospitalLicenceUrl: "",
-    bedInfo: [{ bedType: "", count: 0, price: 0 }]
+    bedInfo: bedTypeEnum.map(type => ({
+      bedType: type,
+      maxCapacity: 0,
+      price: 0
+    }))
   });
 
   // Error state
@@ -90,7 +113,7 @@ export default function AddHospitalForm() {
   };
 
   // Handle bed info changes
-  const handleBedInfoChange = (index, field, value) => {
+  /*const handleBedInfoChange = (index, field, value) => {
     const updatedBedInfo = [...formData.bedInfo];
     updatedBedInfo[index][field] = value;
     
@@ -98,9 +121,18 @@ export default function AddHospitalForm() {
       ...prev,
       bedInfo: updatedBedInfo
     }));
+  };*/
+  const handleBedInfoChange = (index, field, value) => {
+    const updatedBedInfo = [...formData.bedInfo];
+    updatedBedInfo[index][field] = value;
+
+    setFormData(prev => ({
+      ...prev,
+      bedInfo: updatedBedInfo
+    }));
   };
 
-  // Add new bed info
+  /*// Add new bed info
   const addBedInfo = () => {
     setFormData(prev => ({
       ...prev,
@@ -119,18 +151,18 @@ export default function AddHospitalForm() {
         bedInfo: updatedBedInfo
       }));
     }
-  };
+  };*/
 
   // Validate form
-  const validateForm = () => {
+  /*const validateForm = () => {
     const newErrors = {};
-    
+
     // Basic validation
     if (!formData.name) newErrors.name = "Hospital name is required";
     if (!formData.registrationNumber) newErrors.registrationNumber = "Registration number is required";
     if (!formData.contactNumber) newErrors.contactNumber = "Contact number is required";
     if (!formData.email) newErrors.email = "Email is required";
-    
+
     // Address validation
     if (!formData.address.street) newErrors["address.street"] = "Street is required";
     if (!formData.address.city) newErrors["address.city"] = "City is required";
@@ -138,39 +170,54 @@ export default function AddHospitalForm() {
     if (!formData.address.country) newErrors["address.country"] = "Country is required";
     if (!formData.address.pincode) newErrors["address.pincode"] = "Pincode is required";
     if (!formData.address.landmark) newErrors["address.landmark"] = "Landmark is required";
-    
+
     // Department validation
     if (formData.departments.length === 0) newErrors.departments = "At least one department is required";
-    
+
     // License validation
     if (!formData.hospitalLicence) newErrors.hospitalLicence = "Hospital licence is required";
-    
+
     return newErrors;
-  };
+  };*/
 
   // Handle form submission
-  const handleSubmit = (e) => {
+  const handleSubmit = async(e) => {
     if (e) e.preventDefault();
-    
-    const validationErrors = validateForm();
+
+   /* const validationErrors = validateForm();
     if (Object.keys(validationErrors).length > 0) {
+      console.log("asdfghjk");
+      
       setErrors(validationErrors);
       return;
     }
-    
+
     // Clear errors
-    setErrors({});
-    
+    setErrors({});*/
+
     // Submit form data
     console.log("Form submitted:", formData);
     // Add your API call here to save the hospital data
+    try {
+      const storedData = JSON.parse(localStorage.getItem('user'));
+      const token = storedData?.token;
+      const Res = await axios.post("http://127.0.0.1:5000/hospital/add", formData, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`
+        },
+      });
+      console.log(Res);
+    } catch (error) {
+      console.log(error);      
+    }
     alert("Hospital added successfully!");
   };
 
   return (
     <div className="bg-gray-50 p-6 rounded-lg shadow-md max-w-4xl mx-auto">
       <h1 className="text-2xl font-bold mb-6 text-center">Add New Hospital</h1>
-      
+
       <div className="space-y-6">
         {/* Basic Information */}
         <div className="bg-white p-4 rounded-md shadow-sm">
@@ -189,7 +236,7 @@ export default function AddHospitalForm() {
               />
               {errors.name && <p className="text-red-500 text-xs mt-1">{errors.name}</p>}
             </div>
-            
+
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Registration Number*
@@ -203,7 +250,7 @@ export default function AddHospitalForm() {
               />
               {errors.registrationNumber && <p className="text-red-500 text-xs mt-1">{errors.registrationNumber}</p>}
             </div>
-            
+
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Contact Number*
@@ -217,7 +264,7 @@ export default function AddHospitalForm() {
               />
               {errors.contactNumber && <p className="text-red-500 text-xs mt-1">{errors.contactNumber}</p>}
             </div>
-            
+
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Email Address*
@@ -233,7 +280,7 @@ export default function AddHospitalForm() {
             </div>
           </div>
         </div>
-        
+
         {/* Address Information */}
         <div className="bg-white p-4 rounded-md shadow-sm">
           <h2 className="text-lg font-semibold mb-4">Address Information</h2>
@@ -251,7 +298,7 @@ export default function AddHospitalForm() {
               />
               {errors["address.street"] && <p className="text-red-500 text-xs mt-1">{errors["address.street"]}</p>}
             </div>
-            
+
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 City*
@@ -265,7 +312,7 @@ export default function AddHospitalForm() {
               />
               {errors["address.city"] && <p className="text-red-500 text-xs mt-1">{errors["address.city"]}</p>}
             </div>
-            
+
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 State*
@@ -279,7 +326,7 @@ export default function AddHospitalForm() {
               />
               {errors["address.state"] && <p className="text-red-500 text-xs mt-1">{errors["address.state"]}</p>}
             </div>
-            
+
             {/* <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Country*
@@ -307,7 +354,7 @@ export default function AddHospitalForm() {
               />
               {errors["address.pincode"] && <p className="text-red-500 text-xs mt-1">{errors["address.pincode"]}</p>}
             </div>
-            
+
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Landmark*
@@ -323,7 +370,7 @@ export default function AddHospitalForm() {
             </div>
           </div>
         </div>
-        
+
         {/* Departments */}
         <div className="bg-white p-4 rounded-md shadow-sm">
           <h2 className="text-lg font-semibold mb-4">Departments</h2>
@@ -347,7 +394,7 @@ export default function AddHospitalForm() {
             ))}
           </div>
         </div>
-        
+
         {/* Facilities */}
         <div className="bg-white p-4 rounded-md shadow-sm">
           <h2 className="text-lg font-semibold mb-4">Facilities</h2>
@@ -370,24 +417,12 @@ export default function AddHospitalForm() {
             ))}
           </div>
         </div>
-        
+
         {/* Bed Information */}
         <div className="bg-white p-4 rounded-md shadow-sm">
           <h2 className="text-lg font-semibold mb-4">Bed Information</h2>
           {formData.bedInfo.map((bed, index) => (
             <div key={index} className="mb-4 p-3 border rounded-md bg-gray-50">
-              <div className="flex justify-between items-center mb-2">
-                <h3 className="text-md font-medium">Bed Type {index + 1}</h3>
-                {formData.bedInfo.length > 1 && (
-                  <button
-                    type="button"
-                    onClick={() => removeBedInfo(index)}
-                    className="text-red-500 text-sm"
-                  >
-                    Remove
-                  </button>
-                )}
-              </div>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -396,25 +431,24 @@ export default function AddHospitalForm() {
                   <input
                     type="text"
                     value={bed.bedType}
-                    onChange={(e) => handleBedInfoChange(index, 'bedType', e.target.value)}
-                    className="w-full p-2 border rounded-md"
-                    placeholder="e.g., General, ICU, Private"
+                    disabled
+                    className="w-full p-2 border rounded-md bg-gray-100 text-gray-600"
                   />
                 </div>
-                
+
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
                     Count
                   </label>
                   <input
                     type="number"
-                    value={bed.count}
-                    onChange={(e) => handleBedInfoChange(index, 'count', parseInt(e.target.value) || 0)}
+                    value={bed.maxCapacity}
+                    onChange={(e) => handleBedInfoChange(index, 'maxCapacity', parseInt(e.target.value) || 0)}
                     className="w-full p-2 border rounded-md"
                     min="0"
                   />
                 </div>
-                
+
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
                     Price (per day)
@@ -422,7 +456,7 @@ export default function AddHospitalForm() {
                   <input
                     type="number"
                     value={bed.price}
-                    onChange={(e) => handleBedInfoChange(index, 'price', parseFloat(e.target.value) || 0)}
+                    onChange={(e) => handleBedInfoChange(index, "price", parseFloat(e.target.value))}
                     className="w-full p-2 border rounded-md"
                     min="0"
                     step="0.01"
@@ -431,15 +465,9 @@ export default function AddHospitalForm() {
               </div>
             </div>
           ))}
-          <button
-            type="button"
-            onClick={addBedInfo}
-            className="text-blue-500 text-sm mt-2 flex items-center"
-          >
-            + Add Another Bed Type
-          </button>
         </div>
-        
+
+
         {/* License Information */}
         <div className="bg-white p-4 rounded-md shadow-sm">
           <h2 className="text-lg font-semibold mb-4">License Information</h2>
@@ -457,7 +485,7 @@ export default function AddHospitalForm() {
               />
               {errors.hospitalLicence && <p className="text-red-500 text-xs mt-1">{errors.hospitalLicence}</p>}
             </div>
-            
+
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 License Document URL
@@ -473,7 +501,7 @@ export default function AddHospitalForm() {
             </div>
           </div>
         </div>
-        
+
         {/* Verification Status */}
         <div className="bg-white p-4 rounded-md shadow-sm">
           <h2 className="text-lg font-semibold mb-4">Verification Status</h2>
@@ -481,7 +509,7 @@ export default function AddHospitalForm() {
             <p className="text-sm text-gray-600">Initial verification status will be set to "pending"</p>
           </div>
         </div>
-        
+
         {/* Status */}
         <div className="bg-white p-4 rounded-md shadow-sm">
           <h2 className="text-lg font-semibold mb-4">Status</h2>
@@ -499,7 +527,7 @@ export default function AddHospitalForm() {
             </label>
           </div>
         </div>
-        
+
         {/* Submit Button */}
         <div className="flex justify-end">
           <button

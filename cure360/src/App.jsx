@@ -33,6 +33,7 @@ import HealthCheckPage from "./pages/HealthCheck";
 import QueueManagement from "./pages/QueueManagement";
 import RiskAssessmentPage from "./pages/RiskAssessmentPage";
 import AI from "./AI";
+import UpdatedBedInfo from "./hospital/UpdateBedInfo";
 
 const PrivetComponent = () => {
   const storedUser = localStorage.getItem("user");
@@ -59,11 +60,7 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route path="/L" element={<LandingPage />} />
-          <Route path="/location" element={<Location />} />
-          <Route path="/patientform" element={<PatientForm />} />
           <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/hospital" element={<HospitalLandingPage />} />
-          <Route path="/doctors" element={<BookDoctor />} />
           <Route path="/d" element={<Doctor />} />
           <Route path="/chatbot" element={<Home />} />
           <Route path="/addhospital" element={<AddHospitalForm />} />
@@ -73,19 +70,31 @@ function App() {
             path="/appointments-confirmation"
             element={<AppointmentsConfirmation />}
           />
-          <Route path="/risk-assessment" element={<RiskAssessmentPage />} />
           <Route path="/bookhospital" element={<HospitalSelection />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/login" element={<Login />} />
           <Route path="/AI" element={<AI />} />
           <Route path="/hospitaldashboard" element={<HospitalDashboard />} />
-          <Route path="/healthscorechecker" element={< HealthCheckPage/>} />
           <Route path="/bedmanagement" element={<BedManagement />} />
           <Route path="/queuemanagement" element={<QueueManagement />} />
           <Route element={<PrivetComponent />}>
             <Route path="/" element={<LandingPage />} />
             {user1 === "patient" ? (
-              <Route path="/home" element={<Dashboard />} />
+              <>
+                <Route path="/home" element={<Dashboard />} />
+
+                <Route path="/location" element={<Location />} />
+                <Route path="/patientform" element={<PatientForm />} />
+                <Route path="/hospital" element={<HospitalLandingPage />} />
+                <Route path="/doctors" element={<BookDoctor />} />
+                <Route path="/chatbot" element={<Home />} />
+                <Route path="/book-appointment" element={<BookAppointment />} />
+                <Route path="/appointments-confirmation" element={<AppointmentsConfirmation />} />
+                <Route path="/chatbot/chat" element={<Chat />} />
+                <Route path="/bookhospital" element={<HospitalSelection />} />
+                <Route path="/hospitaldashboard" element={<HospitalDashboard />} />
+                <Route path="/AI" element={<AI />} />
+              </>
             ) : (
               <></>
             )}
@@ -98,7 +107,13 @@ function App() {
               <></>
             )}
             {user1 === "hospital" ? (
-              <Route path="/home" element={<HospitalFront />} />
+              <>
+                <Route path="/home" element={<HospitalFront />} />
+                <Route path="/bedmanagement" element={<BedManagement />} />
+                <Route path="/queuemanagement" element={<QueueManagement />} />
+                <Route path="/addhospital" element={<AddHospitalForm />} />
+                <Route path="/updateBed" element={<UpdatedBedInfo/>}/>
+              </>
             ) : (
               <></>
             )}

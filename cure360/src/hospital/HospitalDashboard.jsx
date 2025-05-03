@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState,} from 'react';
 import { RefreshCw, Search, Eye, Hospital, Bed, Users, Ambulance } from 'lucide-react';
 
 const HospitalLandingPage = () => {
@@ -130,13 +130,14 @@ const HospitalLandingPage = () => {
             <span>CURE360</span>
           </div>
           <nav>
-            <ul className="flex gap-6">
-              <li><a href="#" className="text-white hover:text-blue-500 transition-colors">Dashboard</a></li>
-              <li><a href="#" className="text-blue-500 border-b-2 border-blue-500">Availability</a></li>
+            <ul className="flex gap-6 text-sm">
+              <li><a href="/home" className="text-white hover:text-blue-200 transition-colors">Dashboard</a></li>
+              <li><a href="/home" className="text-blue-500 border-b-2 border-blue-200">Availability</a></li>
         
-              <li><a href="/bedmanagement" className="text-white hover:text-blue-500 transition-colors">Bed Management</a></li>
-              <li><a href="/queuemanagement" className="text-white hover:text-blue-500 transition-colors">Queue Management</a></li>
-              <li><a href="#" className="text-white hover:text-blue-500 transition-colors">Inventory Management</a></li>
+              <li><a href="/bedmanagement" className="text-white hover:text-blue-200 transition-colors">Bed Management</a></li>
+              <li><a href="/queuemanagement" className="text-white hover:text-blue-200 transition-colors">Queue Management</a></li>
+              <li><a href="/home" className="text-white hover:text-blue-200 transition-colors">Inventory Management</a></li>
+              <li><a href="/updateBed" className="text-white hover:text-blue-200 transition-colors">update beds</a></li>
             </ul>
           </nav>
         </div>

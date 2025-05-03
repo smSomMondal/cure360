@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useMemo } from "react";
+import axios from 'axios'
 const doctorsDB = [
   {
     id: 1,
@@ -1476,7 +1477,36 @@ export default function BookDoctor() {
   const [selectedState, setSelectedState] = useState("");
   const [selectedCity, setSelectedCity] = useState("");
   const [selectedSpec, setSelectedSpec] = useState("");
+  const [doctors,setDoctors]=useState([])
 
+
+  //on start the page
+    const fetchDoctor = async()=>{
+
+      try {
+        const storedData = JSON.parse(localStorage.getItem('user'));
+      const token = storedData?.token;
+      const data = await axios.put('http://127.0.0.1:5000/patient/finddoctor',{city:selectedCity, state:selectedState, department:selectedSpec},{
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`
+        },
+      })
+      console.log(data);
+      if (data.status===200) {
+        console.log(data.data.data);
+        setDoctors(data.data.data)
+      }
+      } catch (error) {
+        console.log(error);
+        
+      }
+      
+      
+    }
+  useEffect(()=>{
+    fetchDoctor();
+  },[selectedState,selectedCity,selectedSpec])
   // Using useMemo to prevent unnecessary re-filtering on each render
   const filteredDoctors = useMemo(() => {
     return doctorsDB
@@ -1560,7 +1590,7 @@ export default function BookDoctor() {
         <h2 className="text-lg font-semibold text-gray-700">
           Available Doctors
           <span className="ml-2 text-sm font-normal text-gray-500">
-            ({filteredDoctors.length} found)
+            ({doctors.length} found)
           </span>
         </h2>
         
@@ -1571,8 +1601,8 @@ export default function BookDoctor() {
 
       {/* Doctor Results */}
       <div className="space-y-4">
-        {filteredDoctors.length > 0 ? (
-          filteredDoctors.map((doc) => (
+        {doctors.length > 0 ? (
+          doctors.map((doc) => (
             <div
               key={doc.id}
               className="border rounded-xl p-4 md:p-5 shadow-sm hover:shadow-md transition-shadow bg-white flex flex-col md:flex-row justify-between md:items-center gap-4"
@@ -1584,7 +1614,7 @@ export default function BookDoctor() {
                     {doc.specialization}
                   </span>
                   <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
-                    {doc.city}, {doc.state}
+                    {doc.address.city}, {doc.address.state}
                   </span>
                 </div>
                 <p className="text-sm mt-2 text-gray-600">
