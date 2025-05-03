@@ -28,31 +28,15 @@ export default function Dashboard() {
     // Simulate loading data
     setIsLoading(true);
     setTimeout(() => {
-      setUserName("Kai Hiwatari");
+      setUserName("Ankur Goswami");
       setAppointments([
         {
           id: 1,
-          title: "Consultation with Dr. Tsunade",
+          title: "Consultation with Dr. jaiswal",
           type: "Doctor",
           date: "April 14, 2025",
           time: "10:30 AM",
           location: "Konoha, Japan",
-        },
-        {
-          id: 2,
-          title: "Blood Test - Complete Panel",
-          type: "Lab",
-          date: "April 15, 2025",
-          time: "08:00 AM",
-          location: "Tokyo, Japan",
-        },
-        {
-          id: 3,
-          title: "Consultation with Dr. Rangiku",
-          type: "Doctor",
-          date: "April 17, 2025",
-          time: "08:00 AM",
-          location: "Soul Society, Hueco Mundo",
         },
       ]);
       setIsLoading(false);
@@ -123,7 +107,7 @@ export default function Dashboard() {
     },
     {
       label: "Health Score",
-      value: "85%",
+      value: "70%",
       icon: <HeartPulse className="w-5 h-5" />
     }
 
