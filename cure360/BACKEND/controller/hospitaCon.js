@@ -280,6 +280,9 @@ const updateBedInfo = expressAsyncHandler(async (req, res) => {
     if (maxCapacity !== undefined) bed.maxCapacity = maxCapacity;
 
     if (Array.isArray(addAadhar)) {
+        if(bed.maxCapacity === bed.addharNo.length){
+            return res.status(400).json({massage:"no bed available"})
+        }
       bed.addharNo.push(...addAadhar.filter(a => !bed.addharNo.includes(a)));
     }
 
@@ -288,7 +291,7 @@ const updateBedInfo = expressAsyncHandler(async (req, res) => {
     }
 
     await hospital.save();
-    res.json({ success: true, bedInfo: hospital.bedInfo });
+    res.status(200).json({ success: true, bedInfo: hospital.bedInfo });
   } catch (error) {
     res.status(500).json({ success: false, error: error.message });
   }

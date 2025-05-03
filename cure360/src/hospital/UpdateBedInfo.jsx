@@ -71,16 +71,27 @@ const UpdatedBedInfo = () => {
         return;
       }
 
-      await axios.post(`http://127.0.0.1:5000/hospital/${hospitalId}/bedinfo`, {
+      const data = await axios.post(`http://127.0.0.1:5000/hospital/${hospitalId}/bedinfo`, {
         bedType: selectedBed.bedType,
         addAadhar: [newAadhar]
       });
-      
       showSuccessMessage("Aadhar number added successfully!");
       setNewAadhar('');
+      console.log(data);
+      
+      if(data.status===200){
+        window.location.reload();
+      }else{
+        console.log(data.data);
+        
+      }
+        
+      // updateBed();
       fetchBed();
     } catch (error) {
-      setError("Failed to add Aadhar number");
+      console.log(error.response.data.massage);
+      
+      setError(error.response.data.massage);
       console.error(error);
     }
   };
@@ -91,8 +102,8 @@ const UpdatedBedInfo = () => {
         bedType: selectedBed.bedType,
         removeAadhar: [aadhar]
       });
-      
       showSuccessMessage("Aadhar number removed successfully!");
+      window.location.reload();
       fetchBed();
     } catch (error) {
       setError("Failed to remove Aadhar number");
