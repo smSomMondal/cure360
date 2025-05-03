@@ -467,7 +467,7 @@ function PatientDetailModal({ patient, onClose, onPrescription }) {
           <button className="patient-action-btn btn-prescription" onClick={onPrescription}>
             Send Prescription
           </button>
-          <button className="patient-action-btn btn-call" onClick={() => alert(`Initiating call to ${patient.name} at ${patient.contact}`)}>
+          <button className="patient-action-btn btn-call" onClick={() => {window.location.href='https://whimsical-melomakarona-512245.netlify.app/'}}>
             Call Patient
           </button>
           <button className="patient-action-btn btn-chat" onClick={() => alert(`Opening chat with ${patient.name}`)}>

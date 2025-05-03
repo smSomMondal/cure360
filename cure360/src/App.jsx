@@ -35,6 +35,7 @@ import HealthCheckPage from "./pages/HealthCheck";
 import AI from "./AI";
 import UpdatedBedInfo from "./hospital/UpdateBedInfo";
 import InventoryManagement from "./pages/InventoryManagement";
+import Vedio from "./pages/Vedio";
 const PrivetComponent = () => {
   const storedUser = localStorage.getItem("user");
   return storedUser ? <Outlet /> : <Navigate to={"/login"} />;
@@ -82,6 +83,7 @@ function App() {
                 <Route path="/bookhospital" element={<HospitalSelection />} />
                 <Route path="/hospitaldashboard" element={<HospitalDashboard />} />
                 <Route path="/AI" element={<AI />} />
+                <Route path="/vedioCall" element={<Vedio/>}/>
               </>
             ) : (
               <></>
@@ -90,6 +92,8 @@ function App() {
               <>
                 <Route path="/home" element={<Doctor />} />
                 <Route path="/addDoctor" element={<AddDoctor />} />
+                <Route path="/vedioCall" element={<Vedio/>}/>
+
               </>
             ) : (
               <></>

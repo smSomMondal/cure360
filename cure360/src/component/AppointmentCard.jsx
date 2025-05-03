@@ -9,6 +9,10 @@ export default function AppointmentCard({ appointment }) {
     }
   };
 
+  const startCall=()=>{
+    window.location.href='https://whimsical-melomakarona-512245.netlify.app/'
+  }
+
   return (
     <div className="p-4 bg-white border rounded-xl shadow hover:shadow-md transition-shadow space-y-3">
       <div className="flex justify-between items-start">
@@ -26,8 +30,8 @@ export default function AppointmentCard({ appointment }) {
         {appointment.location}
       </div>
       <div className="flex justify-between pt-2 mt-2 border-t border-gray-100">
-        <button className="text-xs text-blue-600 hover:text-blue-800 font-medium">
-          Reschedule
+        <button  onClick={startCall} className="text-xs text-blue-600 hover:text-blue-800 font-medium">
+          start call
         </button>
         <button className="text-xs text-red-600 hover:text-red-800 font-medium">
           Cancel

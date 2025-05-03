@@ -21,7 +21,7 @@ export default function RiskAssessmentPage() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div 
             className="bg-blue-100 p-6 rounded-lg shadow-md cursor-pointer hover:bg-blue-200 transition-colors flex flex-col items-center justify-center h-48"
-            onClick={() => handleBoxClick('diabetes')}
+            onClick={() => {window.location.href='https://j5dlzsbfymlpofg4j8jrkh.streamlit.app/'}}
           >
             <h2 className="text-xl font-semibold text-blue-800 mb-2">Diabetes Risk Assessment</h2>
             <p className="text-blue-600 text-center">Evaluate your risk factors for diabetes</p>
