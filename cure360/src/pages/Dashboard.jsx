@@ -34,9 +34,9 @@ export default function Dashboard() {
           id: 1,
           title: "Consultation with Dr. jaiswal",
           type: "Doctor",
-          date: "April 14, 2025",
-          time: "10:30 AM",
-          location: "Konoha, Japan",
+          date: "May 3, 2025",
+          time: "16:30 pm",
+          location: "kolkata, west bengal",
         },
       ]);
       setIsLoading(false);
