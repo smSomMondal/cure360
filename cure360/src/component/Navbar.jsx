@@ -129,7 +129,7 @@ export default function Navbar() {
               >
                 <Button
                   component={Link}
-                  to="/patientform"
+                  to="/login"
                   variant="contained"
                   color="primary"
                   startIcon={<AccountCircle />}
