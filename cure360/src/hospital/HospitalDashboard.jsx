@@ -137,7 +137,7 @@ const HospitalLandingPage = () => {
               <li><a href="/bedmanagement" className="text-white hover:text-blue-200 transition-colors">Bed Management</a></li>
               <li><a href="/queuemanagement" className="text-white hover:text-blue-200 transition-colors">Queue Management</a></li>
               <li><a href="/home" className="text-white hover:text-blue-200 transition-colors">Inventory Management</a></li>
-              <li><a href="/home" className="text-white hover:text-blue-200 transition-colors">update beds</a></li>
+              <li><a href="/updateBed" className="text-white hover:text-blue-200 transition-colors">update beds</a></li>
             </ul>
           </nav>
         </div>
